@@ -25,6 +25,5 @@ public class BrickRotator {
         this.brick = brick;
         currentShape = 0;
     }
-
-
+    sgfsgs
 }
