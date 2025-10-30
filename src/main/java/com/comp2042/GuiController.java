@@ -41,12 +41,12 @@ public class GuiController implements Initializable {
     private GameOverPanel gameOverPanel;
 
     @FXML
+    private Label scoreLabel;
+
+    @FXML
     private GridPane nextBrickPanel;
 
     private Rectangle[][] nextBrickRectangles;
-
-    @FXML
-    private Label scoreLabel;
 
     private Rectangle[][] displayMatrix;
 
