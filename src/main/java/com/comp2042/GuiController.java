@@ -54,6 +54,8 @@ public class GuiController implements Initializable {
 
     private Rectangle[][] rectangles;
 
+    private Rectangle[][] shadowRectangles;
+
     private Timeline timeLine;
 
     private final BooleanProperty isPause = new SimpleBooleanProperty();
@@ -122,6 +124,17 @@ public class GuiController implements Initializable {
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
+        shadowRectangles = new Rectangle[brick.getBrickData().length][brick.getBrickData()[0].length];
+        for (int i = 0; i < brick.getBrickData().length; i++) {
+            for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
+                rectangle.setFill(Color.TRANSPARENT);
+                rectangle.setOpacity(0.3); // Make shadow semi-transparent
+                shadowRectangles[i][j] = rectangle;
+                gamePanel.add(rectangle, j, i);
+            }
+        }
+
         initNextBrickPanel(brick.getNextBrickData());
 
         timeLine = new Timeline(new KeyFrame(
@@ -176,6 +189,7 @@ public class GuiController implements Initializable {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
                 }
             }
+            updateShadow(brick);
         }
         updateNextBrickDisplay(brick.getNextBrickData());
     }
@@ -289,6 +303,32 @@ public class GuiController implements Initializable {
                     int targetX = offsetX + (j - minCol);
                     if (targetY < 4 && targetX < 4 && nextBrickData[i][j] != 0) {
                         nextBrickRectangles[targetY][targetX].setFill(getFillColor(nextBrickData[i][j]));
+                    }
+                }
+            }
+        }
+    }
+    private void updateShadow(ViewData brick) {
+        for (int i = 0; i < shadowRectangles.length; i++) {
+            for (int j = 0; j < shadowRectangles[i].length; j++) {
+                shadowRectangles[i][j].setFill(Color.TRANSPARENT);
+                gamePanel.getChildren().remove(shadowRectangles[i][j]);
+            }
+        }
+
+        if (brick.getShadowYPosition() != brick.getyPosition()) {
+            for (int i = 0; i < brick.getBrickData().length; i++) {
+                for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                    if (brick.getBrickData()[i][j] != 0) {
+                        int gridX = brick.getxPosition() + j;
+                        int gridY = brick.getShadowYPosition() + i;
+
+                        if (gridY >= 2 && gridY < 25) {
+                            shadowRectangles[i][j].setFill(getFillColor(brick.getBrickData()[i][j]));
+                            shadowRectangles[i][j].setArcHeight(9);
+                            shadowRectangles[i][j].setArcWidth(9);
+                            gamePanel.add(shadowRectangles[i][j], gridX, gridY - 2);
+                        }
                     }
                 }
             }
