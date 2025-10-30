@@ -35,7 +35,7 @@ public class MainMenuController implements Initializable {
 
             Stage stage = (Stage) newGameButton.getScene().getWindow();
             stage.setTitle("TetrisJFX");
-            Scene scene = new Scene(root, 400, 550);
+            Scene scene = new Scene(root, 450, 550);
             stage.setScene(scene);
 
             new GameController(c);

@@ -24,4 +24,11 @@
         <URL value="@window_style.css"/>
     </stylesheets>
     <Label fx:id="scoreLabel" text="0" styleClass="scoreClass" layoutX="250" layoutY="10"/>
+
+    <VBox layoutX="250" layoutY="350" spacing="10" style="-fx-alignment: center;">
+        <Label text="NEXT BRICK:" style="-fx-text-fill: yellow; -fx-font-size: 22px; -fx-font-weight: bold;"/>
+        <Pane style="-fx-background-color: #1A1A1A; -fx-border-color: #00CED1; -fx-border-width: 5; -fx-border-radius: 10; -fx-background-radius: 10; -fx-pref-width: 100; -fx-pref-height: 100;">
+            <GridPane fx:id="nextBrickPanel" hgap="1" vgap="1" layoutX="30" layoutY="15"/>
+        </Pane>
+    </VBox>
 </Pane>
