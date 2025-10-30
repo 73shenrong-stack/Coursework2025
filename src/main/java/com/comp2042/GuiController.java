@@ -48,6 +48,11 @@ public class GuiController implements Initializable {
     @FXML
     private Label scoreLabel;
 
+    @FXML
+    private GridPane nextBrickPanel;
+
+    private Rectangle[][] nextBrickRectangles;
+
     private Rectangle[][] displayMatrix;
 
     private InputEventListener eventListener;
