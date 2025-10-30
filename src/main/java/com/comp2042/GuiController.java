@@ -37,6 +37,7 @@ public class GuiController implements Initializable {
     @FXML
     private GridPane brickPanel;
 
+
     @FXML
     private GameOverPanel gameOverPanel;
 
