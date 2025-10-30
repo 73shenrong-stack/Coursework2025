@@ -96,7 +96,7 @@ public class SimpleBoard implements Board {
 
     @Override
     public ViewData getViewData() {
-        return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0));
+        return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0), getShadowYPosition());
     }
 
     @Override
@@ -123,5 +123,18 @@ public class SimpleBoard implements Board {
         currentGameMatrix = new int[width][height];
         score.reset();
         createNewBrick();
+    }
+
+    @Override
+    public int getShadowYPosition() {
+        int[][] currentMatrix = MatrixOperations.copy(currentGameMatrix);
+        int shadowY = (int) currentOffset.getY();
+
+        while (!MatrixOperations.intersect(currentMatrix, brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(), shadowY + 1)) {
+            shadowY++;
+        }
+
+        return shadowY;
     }
 }
