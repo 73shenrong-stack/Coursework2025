@@ -1,24 +1,29 @@
 .root {
-    -fx-background-image: url("background_image.png");
+    -fx-background-color: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
 }
 
 .nextBrick {
-    -fx-border-width: 2px;
-    -fx-border-color: whitesmoke;
-    -fx-border-radius: 17px;
+    -fx-border-color: #c084fc;
+        -fx-border-width: 3px;
+        -fx-border-radius: 10px;
+        -fx-background-color: rgba(30, 20, 60, 0.6);
+        -fx-background-radius: 10px;
+        -fx-padding: 10px;
+        -fx-effect: dropshadow(gaussian, rgba(192, 132, 252, 0.5), 12, 0.5, 0, 0);
 }
 
 .gameBoard {
-    -fx-border-color: linear-gradient(#2A5058, #61a2b1);
-    -fx-border-width: 12px;
-    -fx-border-radius: 12px;
+    -fx-border-color: #a855f7;
+    -fx-border-width: 8px;
+    -fx-border-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 15, 0.5, 0, 0);
 }
 
 .nextBrickLabel {
-    -fx-font-family: "Let's go Digital";
-    -fx-padding: 20px 0 0 0;
-    -fx-font-size: 16px;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #e9d5ff;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 10, 0.5, 0, 0);
 }
 
 .ipad-dark-grey {
@@ -54,19 +59,53 @@
 }
 
 .bonusStyle {
+    -fx-text-fill: #c084fc;
     -fx-font-size: 40px;
     -fx-font-weight: bold;
 }
 
 .gameOverStyle {
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 48;
-    -fx-background-color: red;
+    -fx-text-fill: #e9d5ff;
+    -fx-font-size: 33px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 15, 0.5, 0, 0);
 }
 
 .scoreClass{
-    -fx-font-family: "Let's go Digital";
-    -fx-font-size: 30;
-    -fx-fill: yellow;
-    -fx-text-fill: yellow;
+    -fx-text-fill: #fbbf24;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(251, 191, 36, 0.6), 8, 0.5, 0, 0);
 }
+
+.timerStyle {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill:  #fbbf24;
+    -fx-effect: dropshadow(gaussian, rgba(251, 191, 36, 0.6), 8, 0.5, 0, 0);
+}
+
+.linesStyle {
+     -fx-font-size: 24px;
+     -fx-font-weight: bold;
+     -fx-text-fill:  #fbbf24;
+     -fx-effect: dropshadow(gaussian, rgba(251, 191, 36, 0.6), 8, 0.5, 0, 0);
+ }
+
+ .pauseOverlay {
+     -fx-background-color: rgba(0, 0, 0, 0.85);
+ }
+
+ .pauseText {
+     -fx-text-fill: #e9d5ff;
+     -fx-font-size: 48px;
+     -fx-font-weight: bold;
+     -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 15, 0.5, 0, 0);
+ }
+
+ .pauseSubtext {
+     -fx-text-fill: #c084fc;
+     -fx-font-size: 20px;
+     -fx-font-weight: bold;
+     -fx-effect: dropshadow(gaussian, rgba(192, 132, 252, 0.6), 10, 0.5, 0, 0);
+ }

@@ -6,11 +6,15 @@ public class GameController implements InputEventListener {
 
     private final GuiController viewGuiController;
 
-    public GameController(GuiController c) {
-        viewGuiController = c;
+    private final GameMode gameMode;
+
+    public GameController(GuiController c, GameMode mode) {
+        this.viewGuiController = c;
+        this.gameMode = mode;
+
         board.createNewBrick();
         viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
+        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData(), gameMode);
         viewGuiController.bindScore(board.getScore().scoreProperty());
     }
 

@@ -4,8 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -15,10 +17,16 @@ import java.util.ResourceBundle;
 public class MainMenuController implements Initializable {
 
     @FXML
-    private javafx.scene.control.Button newGameButton;
+    private Button blitzModeButton;
 
     @FXML
-    private javafx.scene.control.Button exitButton;
+    private Button fortyLinesModeButton;
+
+    @FXML
+    private Button zenModeButton;
+
+    @FXML
+    private Button exitButton;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -26,21 +34,50 @@ public class MainMenuController implements Initializable {
     }
 
     @FXML
-    public void onNewGame(ActionEvent event) {
+    public void onBlitzMode(ActionEvent event) {
+        startGame(GameMode.BLITZ);
+    }
+
+    @FXML
+    public void onFortyLinesMode(ActionEvent event) {
+        startGame(GameMode.FORTY_LINES);
+    }
+
+    @FXML
+    public void onZenMode(ActionEvent event) {
+        startGame(GameMode.ZEN);
+    }
+
+    private void startGame(GameMode mode) {
         try {
             URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
             FXMLLoader fxmlLoader = new FXMLLoader(location);
             Parent root = fxmlLoader.load();
             GuiController c = fxmlLoader.getController();
 
-            Stage stage = (Stage) newGameButton.getScene().getWindow();
-            stage.setTitle("TetrisJFX");
-            Scene scene = new Scene(root, 400, 550);
+            // Use blitzModeButton instead of newGameButton
+            Stage stage = (Stage) blitzModeButton.getScene().getWindow();
+            stage.setTitle("TetrisJFX - " + getModeTitle(mode));
+            Scene scene = new Scene(root, 900, 700);
             stage.setScene(scene);
+            stage.setResizable(false);
 
-            new GameController(c);
+            new GameController(c, mode);  // ADD mode parameter here
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    private String getModeTitle(GameMode mode) {
+        switch (mode) {
+            case BLITZ:
+                return "Blitz Mode";
+            case FORTY_LINES:
+                return "40 Lines Mode";
+            case ZEN:
+                return "Zen Mode";
+            default:
+                return "TetrisJFX";
         }
     }
 
@@ -48,5 +85,24 @@ public class MainMenuController implements Initializable {
     public void onExit(ActionEvent event) {
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
+    }
+
+    public static void returnToMainMenu(Node currentNode) {
+        try {
+            URL location = MainMenuController.class.getClassLoader().getResource("MainMenu.fxml");
+            FXMLLoader fxmlLoader = new FXMLLoader(location);
+            Parent root = fxmlLoader.load();
+
+            Stage stage = (Stage) currentNode.getScene().getWindow();
+            stage.setTitle("TetrisJFX - Main Menu");
+            Scene scene = new Scene(root, 900, 700);
+
+            String css = MainMenuController.class.getClassLoader().getResource("mainMenu.css").toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage.setScene(scene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -20,8 +20,14 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
 
         primaryStage.setTitle("TetrisJFX - Main Menu");
-        Scene scene = new Scene(root, 400, 510);
+        Scene scene = new Scene(root, 900, 700);
+
+        // Load the CSS file
+        String css = getClass().getClassLoader().getResource("mainMenu.css").toExternalForm();
+        scene.getStylesheets().add(css);
+
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.show();
     }
 

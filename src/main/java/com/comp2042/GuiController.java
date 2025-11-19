@@ -15,6 +15,7 @@ import javafx.scene.effect.Reflection;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -46,6 +47,15 @@ public class GuiController implements Initializable {
     @FXML
     private GridPane nextBrickPanel;
 
+    @FXML
+    private Label modeTimerLabel;
+
+    @FXML
+    private Label linesLabel;
+
+    @FXML
+    private Pane pauseOverlay;
+
     private Rectangle[][] nextBrickRectangles;
 
     private Rectangle[][] displayMatrix;
@@ -61,6 +71,14 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    private GameMode gameMode;
+    private Timeline gameTimer;
+    private int timeRemaining = 120;
+    private int timeElapsed = 0;
+
+    private int linesCleared = 0;
+    private int targetLines = 40;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -91,9 +109,19 @@ public class GuiController implements Initializable {
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
                 }
+                if (keyEvent.getCode() == KeyCode.P) {
+                    pauseGame(null);
+                }
+                if (keyEvent.getCode() == KeyCode.ESCAPE) {
+                    returnToMainMenu();
+                }
             }
         });
         gameOverPanel.setVisible(false);
+
+        if (pauseOverlay != null) {
+            pauseOverlay.setVisible(false);
+        }
 
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
@@ -101,7 +129,8 @@ public class GuiController implements Initializable {
         reflection.setTopOffset(-12);
     }
 
-    public void initGameView(int[][] boardMatrix, ViewData brick) {
+    public void initGameView(int[][] boardMatrix, ViewData brick, GameMode mode) {
+        this.gameMode = mode;
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
@@ -121,6 +150,12 @@ public class GuiController implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
+
+        for (int i = 0; i < rectangles.length; i++) {
+            for (int j = 0; j < rectangles[i].length; j++) {
+                brickPanel.getChildren().remove(rectangles[i][j]);
+            }
+        }
         brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
         brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
 
@@ -137,12 +172,184 @@ public class GuiController implements Initializable {
 
         initNextBrickPanel(brick.getNextBrickData());
 
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+
+        Duration speed = getSpeedForMode(mode);
         timeLine = new Timeline(new KeyFrame(
-                Duration.millis(400),
+                speed,
                 ae -> moveDown(new MoveEvent(EventType.DOWN, EventSource.THREAD))
         ));
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
+
+        isPause.setValue(Boolean.FALSE);
+        isGameOver.setValue(Boolean.FALSE);
+
+        if (modeTimerLabel != null) {
+            modeTimerLabel.setVisible(true);
+        }
+        if (linesLabel != null) {
+            linesLabel.setVisible(true);
+        }
+
+        if (mode == GameMode.BLITZ) {
+            startBlitzMode();
+        }
+        else if (mode == GameMode.FORTY_LINES) {
+            start40LinesMode();
+        }
+        else {
+            startZenMode();
+        }
+    }
+
+    private void startBlitzMode() {
+        timeRemaining = 120;
+        linesCleared = 0;
+        updateTimerDisplay();
+        updateLinesDisplay();
+
+        gameTimer = new Timeline(new KeyFrame(
+                Duration.seconds(1),
+                event -> {
+                    timeRemaining--;
+                    updateTimerDisplay();
+
+                    if (timeRemaining <= 0) {
+                        endBlitzMode();
+                    }
+
+                    if (timeRemaining == 10 && modeTimerLabel != null) {
+                        modeTimerLabel.setTextFill(Color.RED);
+                    }
+                }
+        ));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+    private void start40LinesMode() {
+        timeElapsed = 0;
+        linesCleared = 0;
+        targetLines = 40;
+        updateTimerDisplay();
+        updateLinesDisplay();
+
+        if (modeTimerLabel != null) {
+            modeTimerLabel.setTextFill(Color.YELLOW);
+        }
+        if (linesLabel != null) {
+            linesLabel.setTextFill(Color.YELLOW);
+        }
+
+        gameTimer = new Timeline(new KeyFrame(
+                Duration.seconds(1),
+                event -> {
+                    timeElapsed++;
+                    updateTimerDisplay();
+                }
+        ));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+    private void startZenMode() {
+        timeElapsed = 0;
+        linesCleared = 0;
+        updateTimerDisplay();
+        updateLinesDisplay();
+
+        gameTimer = new Timeline(new KeyFrame(
+                Duration.seconds(1),
+                event -> {
+                    timeElapsed++;
+                    updateTimerDisplay();
+                }
+        ));
+        gameTimer.setCycleCount(Timeline.INDEFINITE);
+        gameTimer.play();
+    }
+
+    private void updateTimerDisplay() {
+        if (modeTimerLabel != null) {
+            if (gameMode == GameMode.BLITZ) {
+                // Countdown timer for Blitz
+                int minutes = timeRemaining / 60;
+                int seconds = timeRemaining % 60;
+                modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
+            } else {
+                // Counting up timer for 40 Lines and Zen
+                int minutes = timeElapsed / 60;
+                int seconds = timeElapsed % 60;
+                modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
+            }
+        }
+    }
+
+    private void updateLinesDisplay() {
+        if (linesLabel != null) {
+            if (gameMode == GameMode.FORTY_LINES) {
+                // Show progress towards 40 lines
+                linesLabel.setText(String.format("Lines: %d / %d", linesCleared, targetLines));
+            } else {
+                // Show total lines cleared for Blitz and Zen
+                linesLabel.setText(String.format("Lines: %d", linesCleared));
+            }
+        }
+    }
+
+    private void end40LinesMode() {
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+
+        // Don't call gameOver() - just stop the game and show completion
+        isGameOver.setValue(Boolean.TRUE);
+
+        if (linesLabel != null) {
+            linesLabel.setText("COMPLETE!");
+            linesLabel.setTextFill(Color.LIME);
+            linesLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
+        }
+
+        if (modeTimerLabel != null) {
+            int minutes = timeElapsed / 60;
+            int seconds = timeElapsed % 60;
+            modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
+        }
+        showCompletionMessage();
+    }
+
+    private void showCompletionMessage() {
+        NotificationPanel completionPanel = new NotificationPanel("40 LINES COMPLETE!");
+        groupNotification.getChildren().add(completionPanel);
+    }
+
+    private void endBlitzMode() {
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+        gameOver();
+    }
+
+    private Duration getSpeedForMode(GameMode mode) {
+        switch (mode) {
+            case BLITZ:
+                return Duration.millis(300); // Faster for Blitz
+            case ZEN:
+                return Duration.millis(600); // Slower for Zen
+            case FORTY_LINES:
+            default:
+                return Duration.millis(400); // Normal speed
+        }
     }
 
     private Paint getFillColor(int i) {
@@ -182,16 +389,37 @@ public class GuiController implements Initializable {
 
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
-            brickPanel.setLayoutX(gamePanel.getLayoutX() + brick.getxPosition() * brickPanel.getVgap() + brick.getxPosition() * BRICK_SIZE);
-            brickPanel.setLayoutY(-42 + gamePanel.getLayoutY() + brick.getyPosition() * brickPanel.getHgap() + brick.getyPosition() * BRICK_SIZE);
-            for (int i = 0; i < brick.getBrickData().length; i++) {
-                for (int j = 0; j < brick.getBrickData()[i].length; j++) {
-                    setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);
+            // 1. CLEAR the old falling piece (the 4×4 rectangles)
+            for (Rectangle[] row : rectangles) {
+                for (Rectangle r : row) {
+                    r.setFill(Color.TRANSPARENT);
+                    if (r.getParent() == gamePanel) {
+                        gamePanel.getChildren().remove(r);
+                    }
                 }
             }
+
+
+            for (int i = 0; i < brick.getBrickData().length; i++) {
+                for (int j = 0; j < brick.getBrickData()[i].length; j++) {
+                    if (brick.getBrickData()[i][j] != 0) {
+                        int gridX = brick.getxPosition() + j;
+                        int gridY = brick.getyPosition() + i;
+
+                        // Only draw inside the visible area (rows 2–24)
+                        if (gridY >= 2) {
+                            rectangles[i][j].setFill(getFillColor(brick.getBrickData()[i][j]));
+                            rectangles[i][j].setArcWidth(9);
+                            rectangles[i][j].setArcHeight(9);
+                            gamePanel.add(rectangles[i][j], gridX, gridY - 2);
+                        }
+                    }
+                }
+            }
+
             updateShadow(brick);
+            updateNextBrickDisplay(brick.getNextBrickData());
         }
-        updateNextBrickDisplay(brick.getNextBrickData());
     }
 
     public void refreshGameBackground(int[][] board) {
@@ -211,11 +439,25 @@ public class GuiController implements Initializable {
     private void moveDown(MoveEvent event) {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
+
+            // Handle notifications for cleared lines
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
                 NotificationPanel notificationPanel = new NotificationPanel("+" + downData.getClearRow().getScoreBonus());
                 groupNotification.getChildren().add(notificationPanel);
                 notificationPanel.showScore(groupNotification.getChildren());
+
+                // Update lines cleared for all modes
+                linesCleared += downData.getClearRow().getLinesRemoved();
+                updateLinesDisplay();
+
+                // Check 40 Lines mode completion
+                if (gameMode == GameMode.FORTY_LINES && linesCleared >= targetLines) {
+                    end40LinesMode();
+                    gamePanel.requestFocus();
+                    return;
+                }
             }
+
             refreshBrick(downData.getViewData());
         }
         gamePanel.requestFocus();
@@ -226,27 +468,91 @@ public class GuiController implements Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
-        scoreLabel.textProperty().bind(integerProperty.asString("Score:%d"));
+        scoreLabel.textProperty().bind(integerProperty.asString("Score: %d"));
     }
 
     public void gameOver() {
-        timeLine.stop();
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
         gameOverPanel.setVisible(true);
         isGameOver.setValue(Boolean.TRUE);
     }
 
     public void newGame(ActionEvent actionEvent) {
-        timeLine.stop();
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+
         gameOverPanel.setVisible(false);
         eventListener.createNewGame();
+
+        if (gameMode == GameMode.BLITZ) {
+            startBlitzMode();
+        } else if (gameMode == GameMode.FORTY_LINES) {
+            start40LinesMode();
+        } else if (gameMode == GameMode.ZEN) {
+            startZenMode();
+        }
+
         gamePanel.requestFocus();
-        timeLine.play();
+
+        if (timeLine != null) {
+            timeLine.play();
+        }
         isPause.setValue(Boolean.FALSE);
         isGameOver.setValue(Boolean.FALSE);
     }
 
     public void pauseGame(ActionEvent actionEvent) {
+        // Don't allow pausing when game is over
+        if (isGameOver.getValue() == Boolean.TRUE) {
+            return;
+        }
+
+        if (isPause.getValue() == Boolean.FALSE) {
+            isPause.setValue(Boolean.TRUE);
+            if (timeLine != null) {
+                timeLine.pause();
+            }
+            if (gameTimer != null) {
+                gameTimer.pause();
+            }
+            if (pauseOverlay != null) {
+                pauseOverlay.setVisible(true);
+            }
+        } else {
+            isPause.setValue(Boolean.FALSE);
+            if (timeLine != null) {
+                timeLine.play();
+            }
+            if (gameTimer != null) {
+                gameTimer.play();
+            }
+            if (pauseOverlay != null) {
+                pauseOverlay.setVisible(false);
+            }
+        }
         gamePanel.requestFocus();
+    }
+
+    private void returnToMainMenu() {
+        // Stop all timers
+        if (timeLine != null) {
+            timeLine.stop();
+        }
+        if (gameTimer != null) {
+            gameTimer.stop();
+        }
+
+        // Use the static method from MainMenuController
+        MainMenuController.returnToMainMenu(gamePanel);
     }
 
     private void initNextBrickPanel(int[][] nextBrickData) {
