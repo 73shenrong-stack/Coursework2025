@@ -22,10 +22,15 @@
 
 
     <Group fx:id="groupNotification" layoutX="334" layoutY="253">
-        <VBox alignment="CENTER">
-            <GameOverPanel fx:id="gameOverPanel"/>
-        </VBox>
+        <VBox alignment="CENTER"/>
     </Group>
+
+    <!-- Game Over Overlay -->
+    <Pane fx:id="gameOverOverlay" styleClass="gameOverOverlay" prefWidth="900" prefHeight="700" visible="false">
+        <Label text="GAME OVER" styleClass="gameOverStyle" layoutX="260" layoutY="250"/>
+        <Label text="Press N for New Game" styleClass="gameOverSubtext" layoutX="310" layoutY="330"/>
+        <Label text="Press ESC for Main Menu" styleClass="gameOverSubtext" layoutX="290" layoutY="360"/>
+    </Pane>
 
     <stylesheets>
         <URL value="@window_style.css"/>
@@ -36,18 +41,18 @@
     <Label fx:id="linesLabel" text="Lines: 0 / 40" styleClass="linesStyle" layoutX="650" layoutY="50" visible="false"/>
 
     <!-- Next Brick -->
-    <VBox layoutX="650" layoutY="300" spacing="10" alignment= "CENTER">
+    <VBox fx:id="nextBrickContainer" layoutX="650" layoutY="300" spacing="10" style="-fx-alignment: center;">
         <Label text="Next Brick:" styleClass="nextBrickLabel"/>
-        <Pane styleClass="nextBrick">
+        <Pane styleClass="nextBrick" prefWidth="150" prefHeight="120">
             <GridPane fx:id="nextBrickPanel" hgap="1" vgap="1" layoutX="30" layoutY="15"/>
         </Pane>
     </VBox>
 
     <!-- Hold Brick -->
-    <VBox layoutX="50" layoutY="300" spacing="10" alignment="CENTER">
-        <Label text="HOLD:" styleClass="nextBrickLabel"/>
-        <Pane styleClass="nextBrick">
-            <GridPane fx:id="holdBrickPanel" hgap="1" vgap="1" layoutX="30" layoutY="15"/>
+    <VBox fx:id="HoldBrickContainer" layoutX="80" layoutY="150" spacing="10" style="-fx-alignment: center;">
+        <Label text="Hold:" styleClass="nextBrickLabel"/>
+        <Pane styleClass="nextBrick" prefWidth="150" prefHeight="120">
+            <GridPane fx:id="HoldBrickPanel" hgap="1" vgap="1" layoutX="10" layoutY="10"/>
         </Pane>
     </VBox>
 

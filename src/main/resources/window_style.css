@@ -66,10 +66,21 @@
 
 .gameOverStyle {
     -fx-text-fill: #e9d5ff;
-    -fx-font-size: 33px;
+    -fx-font-size: 60px;
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 15, 0.5, 0, 0);
 }
+
+.gameOverOverlay {
+     -fx-background-color: rgba(0, 0, 0, 0.90);
+ }
+
+ .gameOverSubtext {
+     -fx-text-fill: #e9d5ff;
+     -fx-font-size: 24px;
+     -fx-font-weight: bold;
+     -fx-effect: dropshadow(gaussian, rgba(168, 85, 247, 0.8), 15, 0.5, 0, 0);
+ }
 
 .scoreClass{
     -fx-text-fill: #fbbf24;

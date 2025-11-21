@@ -4,7 +4,7 @@ import com.comp2042.logic.bricks.Brick;
 
 public class BrickRotator {
 
-    private Brick brick;
+    public Brick brick;
     private int currentShape = 0;
 
     public NextShapeInfo getNextShape() {
@@ -26,5 +26,8 @@ public class BrickRotator {
         currentShape = 0;
     }
 
+    public Brick getBrick() {
+        return brick;
+    }
 
 }

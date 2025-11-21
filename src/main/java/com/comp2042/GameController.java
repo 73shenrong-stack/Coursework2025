@@ -15,7 +15,18 @@ public class GameController implements InputEventListener {
         board.createNewBrick();
         viewGuiController.setEventListener(this);
         viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData(), gameMode);
+        viewGuiController.updateHeldBrick(board.getViewData());
         viewGuiController.bindScore(board.getScore().scoreProperty());
+    }
+
+    public void onHoldEvent() {
+                if (board.holdBrick()) {
+            ViewData vd = board.getViewData();
+            viewGuiController.refreshBrick(vd);
+            viewGuiController.updateNextBrick(vd);
+            viewGuiController.updateHeldBrick(vd);
+            viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        }
     }
 
     @Override
@@ -65,5 +76,13 @@ public class GameController implements InputEventListener {
     public void createNewGame() {
         board.newGame();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
+    }
+
+    public ViewData getCurrentViewData() {
+        return board.getViewData();
+    }
+
+    public int[][] getCurrentBoardMatrix() {
+        return board.getBoardMatrix();
     }
 }

@@ -15,6 +15,8 @@ public class SimpleBoard implements Board {
     private int[][] currentGameMatrix;
     private Point currentOffset;
     private final Score score;
+    private Brick heldBrick = null;
+    private boolean hasHeld = false;
 
     public SimpleBoard(int width, int height) {
         this.width = width;
@@ -23,6 +25,36 @@ public class SimpleBoard implements Board {
         brickGenerator = new RandomBrickGenerator();
         brickRotator = new BrickRotator();
         score = new Score();
+    }
+
+    public boolean holdBrick() {
+        if (hasHeld) {
+            return false;
+        }
+
+        Brick currentBrick = brickRotator.brick;
+
+        if (heldBrick == null) {
+            heldBrick = currentBrick;
+            hasHeld = true;
+            createNewBrick();
+        } else {
+            Brick temp = heldBrick;
+            heldBrick = currentBrick;
+            brickRotator.setBrick(temp);
+            brickRotator.setCurrentShape(0);
+            hasHeld = true;
+        }
+        currentOffset = new Point(3, 0);
+        return true;
+    }
+
+    public Brick getHeldBrick() {
+        return heldBrick;
+    }
+
+    public void resetHasHeld() {
+        hasHeld = false;
     }
 
     @Override
@@ -86,6 +118,7 @@ public class SimpleBoard implements Board {
         Brick currentBrick = brickGenerator.getBrick();
         brickRotator.setBrick(currentBrick);
         currentOffset = new Point(3, 0);
+        hasHeld = false;
         return MatrixOperations.intersect(currentGameMatrix, brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY());
     }
 
@@ -96,7 +129,21 @@ public class SimpleBoard implements Board {
 
     @Override
     public ViewData getViewData() {
-        return new ViewData(brickRotator.getCurrentShape(), (int) currentOffset.getX(), (int) currentOffset.getY(), brickGenerator.getNextBrick().getShapeMatrix().get(0), getShadowYPosition());
+        int[][] heldData;
+        if (heldBrick != null) {
+            // Always use the first rotation (index 0) for display
+            heldData = heldBrick.getShapeMatrix().get(0);
+        } else {
+            heldData = new int[4][4];
+        }
+        return new ViewData(
+                brickRotator.getCurrentShape(),
+                (int) currentOffset.getX(),
+                (int) currentOffset.getY(),
+                brickGenerator.getNextBrick().getShapeMatrix().get(0),
+                getShadowYPosition(),
+                heldData
+        );
     }
 
     @Override
@@ -122,6 +169,8 @@ public class SimpleBoard implements Board {
     public void newGame() {
         currentGameMatrix = new int[width][height];
         score.reset();
+        heldBrick = null;
+        hasHeld = false;
         createNewBrick();
     }
 
