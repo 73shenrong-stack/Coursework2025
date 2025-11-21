@@ -616,8 +616,9 @@ public class GuiController implements Initializable {
         MainMenuController.returnToMainMenu(gamePanel);
     }
 
+// ===== NEXT BRICK PANEL METHODS (UNCHANGED - KEEP AS IS) =====
+
     private void initNextBrickPanel(int[][] nextBrickData) {
-        // Create a 4x4 grid for next brick preview
         nextBrickRectangles = new Rectangle[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -633,16 +634,13 @@ public class GuiController implements Initializable {
     }
 
     private void updateNextBrickDisplay(int[][] nextBrickData) {
-        // Clear the display first
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 nextBrickRectangles[i][j].setFill(Color.TRANSPARENT);
             }
         }
 
-        // Display the next brick centered in the 4x4 grid
         if (nextBrickData != null) {
-            // Count non-empty cells to find actual brick dimensions
             int minRow = 4, maxRow = -1, minCol = 4, maxCol = -1;
             for (int i = 0; i < nextBrickData.length; i++) {
                 for (int j = 0; j < nextBrickData[i].length; j++) {
@@ -655,21 +653,21 @@ public class GuiController implements Initializable {
                 }
             }
 
-            // Calculate actual brick size
-            int brickHeight = maxRow - minRow + 1;
-            int brickWidth = maxCol - minCol + 1;
+            if (maxRow != -1) {
+                int brickHeight = maxRow - minRow + 1;
+                int brickWidth = maxCol - minCol + 1;
+                int offsetX = (4 - brickWidth) / 2;
+                int offsetY = (4 - brickHeight) / 2;
 
-            // Center the brick in the 4x4 grid
-            int offsetX = (4 - brickWidth) / 2;
-            int offsetY = (4 - brickHeight) / 2;
-
-            // Display only the non-empty part of the brick, centered
-            for (int i = minRow; i <= maxRow; i++) {
-                for (int j = minCol; j <= maxCol; j++) {
-                    int targetY = offsetY + (i - minRow);
-                    int targetX = offsetX + (j - minCol);
-                    if (targetY < 4 && targetX < 4 && nextBrickData[i][j] != 0) {
-                        nextBrickRectangles[targetY][targetX].setFill(getFillColor(nextBrickData[i][j]));
+                for (int i = minRow; i <= maxRow; i++) {
+                    for (int j = minCol; j <= maxCol; j++) {
+                        int targetY = offsetY + (i - minRow);
+                        int targetX = offsetX + (j - minCol);
+                        if (targetY >= 0 && targetY < 4 && targetX >= 0 && targetX < 4 && nextBrickData[i][j] != 0) {
+                            nextBrickRectangles[targetY][targetX].setFill(getFillColor(nextBrickData[i][j]));
+                            nextBrickRectangles[targetY][targetX].setArcWidth(6);
+                            nextBrickRectangles[targetY][targetX].setArcHeight(6);
+                        }
                     }
                 }
             }
@@ -680,8 +678,9 @@ public class GuiController implements Initializable {
         updateNextBrickDisplay(viewData.getNextBrickData());
     }
 
+// ===== HOLD BRICK PANEL METHODS (FIXED) =====
+
     private void initHoldBrickPanel() {
-        // Create a 4x4 grid for hold brick preview
         holdBrickRectangles = new Rectangle[4][4];
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
@@ -690,13 +689,13 @@ public class GuiController implements Initializable {
                 rectangle.setArcHeight(6);
                 rectangle.setArcWidth(6);
                 holdBrickRectangles[i][j] = rectangle;
-                HoldBrickPanel.add(rectangle, j, i);  // column = j, row = i
+                HoldBrickPanel.add(rectangle, j, i);
             }
         }
     }
 
     public void updateHeldBrick(ViewData viewData) {
-        // Clear the display first
+        // Clear display
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 holdBrickRectangles[i][j].setFill(Color.TRANSPARENT);
@@ -706,42 +705,38 @@ public class GuiController implements Initializable {
         if (viewData == null) return;
 
         int[][] heldBrickData = viewData.getHeldBrickData();
+        if (heldBrickData == null) return;
 
-        // Display the held brick centered in the 4x4 grid
-        if (heldBrickData != null) {
-            // Count non-empty cells to find actual brick dimensions
-            int minRow = 4, maxRow = -1, minCol = 4, maxCol = -1;
-            for (int i = 0; i < heldBrickData.length; i++) {
-                for (int j = 0; j < heldBrickData[i].length; j++) {
-                    if (heldBrickData[i][j] != 0) {
-                        minRow = Math.min(minRow, i);
-                        maxRow = Math.max(maxRow, i);
-                        minCol = Math.min(minCol, j);
-                        maxCol = Math.max(maxCol, j);
-                    }
+        // Find brick bounds - IDENTICAL to next brick
+        int minRow = 4, maxRow = -1, minCol = 4, maxCol = -1;
+        for (int i = 0; i < heldBrickData.length; i++) {
+            for (int j = 0; j < heldBrickData[i].length; j++) {
+                if (heldBrickData[i][j] != 0) {
+                    minRow = Math.min(minRow, i);
+                    maxRow = Math.max(maxRow, i);
+                    minCol = Math.min(minCol, j);
+                    maxCol = Math.max(maxCol, j);
                 }
             }
+        }
 
-            // Only proceed if we found blocks
-            if (maxRow != -1) {
-                // Calculate actual brick size
-                int brickHeight = maxRow - minRow + 1;
-                int brickWidth = maxCol - minCol + 1;
+        if (maxRow != -1) {
+            int brickHeight = maxRow - minRow + 1;
+            int brickWidth = maxCol - minCol + 1;
 
-                // Center the brick in the 4x4 grid
-                int offsetX = (4 - brickWidth) / 2;
-                int offsetY = (4 - brickHeight) / 2;
+            // IDENTICAL centering calculation as next brick
+            int offsetX = (4 - brickWidth) / 2;
+            int offsetY = (4 - brickHeight) / 2;
 
-                // Display only the non-empty part of the brick, centered
-                for (int i = minRow; i <= maxRow; i++) {
-                    for (int j = minCol; j <= maxCol; j++) {
-                        int targetY = offsetY + (i - minRow);
-                        int targetX = offsetX + (j - minCol);
-                        if (targetY < 4 && targetX < 4 && heldBrickData[i][j] != 0) {
-                            holdBrickRectangles[targetY][targetX].setFill(getFillColor(heldBrickData[i][j]));
-                            holdBrickRectangles[targetY][targetX].setArcWidth(6);
-                            holdBrickRectangles[targetY][targetX].setArcHeight(6);
-                        }
+            // Draw brick - IDENTICAL loop as next brick
+            for (int i = minRow; i <= maxRow; i++) {
+                for (int j = minCol; j <= maxCol; j++) {
+                    int targetY = offsetY + (i - minRow);
+                    int targetX = offsetX + (j - minCol);
+                    if (targetY >= 0 && targetY < 4 && targetX >= 0 && targetX < 4 && heldBrickData[i][j] != 0) {
+                        holdBrickRectangles[targetY][targetX].setFill(getFillColor(heldBrickData[i][j]));
+                        holdBrickRectangles[targetY][targetX].setArcWidth(6);
+                        holdBrickRectangles[targetY][targetX].setArcHeight(6);
                     }
                 }
             }

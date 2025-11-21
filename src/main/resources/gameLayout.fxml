@@ -43,7 +43,7 @@
     <!-- Next Brick -->
     <VBox fx:id="nextBrickContainer" layoutX="650" layoutY="300" spacing="10" style="-fx-alignment: center;">
         <Label text="Next Brick:" styleClass="nextBrickLabel"/>
-        <Pane styleClass="nextBrick" prefWidth="150" prefHeight="120">
+        <Pane styleClass="nextBrick" prefWidth="140" prefHeight="120">
             <GridPane fx:id="nextBrickPanel" hgap="1" vgap="1" layoutX="30" layoutY="15"/>
         </Pane>
     </VBox>
@@ -51,8 +51,8 @@
     <!-- Hold Brick -->
     <VBox fx:id="HoldBrickContainer" layoutX="80" layoutY="150" spacing="10" style="-fx-alignment: center;">
         <Label text="Hold:" styleClass="nextBrickLabel"/>
-        <Pane styleClass="nextBrick" prefWidth="150" prefHeight="120">
-            <GridPane fx:id="HoldBrickPanel" hgap="1" vgap="1" layoutX="10" layoutY="10"/>
+        <Pane styleClass="nextBrick" prefWidth="140" prefHeight="120">
+            <GridPane fx:id="HoldBrickPanel" hgap="1" vgap="1" layoutX="30" layoutY="15"/>
         </Pane>
     </VBox>
 
