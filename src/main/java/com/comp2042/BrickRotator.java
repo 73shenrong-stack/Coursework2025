@@ -30,4 +30,12 @@ public class BrickRotator {
         return brick;
     }
 
+    public int getRotationIndex() {
+        return currentShape;
+    }
+
+    public void setRotationIndex(int index) {
+        this.currentShape = index;
+    }
+
 }

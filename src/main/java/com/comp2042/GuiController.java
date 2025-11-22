@@ -23,7 +23,10 @@ import javafx.scene.text.Font;
 import javafx.util.Duration;
 
 import java.net.URL;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
+import javafx.animation.AnimationTimer;
 
 public class GuiController implements Initializable {
 
@@ -65,6 +68,8 @@ public class GuiController implements Initializable {
     @FXML
     private Pane pauseOverlay;
 
+    private final Set<KeyCode> pressedKeys = new HashSet<>();
+
     private Rectangle[][] nextBrickRectangles;
 
     private  Rectangle[][] holdBrickRectangles;
@@ -96,10 +101,34 @@ public class GuiController implements Initializable {
         Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
+
+        gamePanel.setOnKeyReleased(keyEvent -> {
+            pressedKeys.remove(keyEvent.getCode());
+        });
+
         gamePanel.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent keyEvent) {
+                pressedKeys.add(keyEvent.getCode());
+
                 if (isPause.getValue() == Boolean.FALSE && isGameOver.getValue() == Boolean.FALSE) {
+
+                    if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
+                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
+
+                        if (pressedKeys.contains(KeyCode.LEFT) || pressedKeys.contains(KeyCode.A)) {
+                            // FIX: Changed from onRotateEvent to onLeftEvent
+                            refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
+                        }
+                        else if (pressedKeys.contains(KeyCode.RIGHT) || pressedKeys.contains(KeyCode.D)) {
+                            // FIX: Changed from onRotateEvent to onRightEvent
+                            refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
+                        }
+
+                        keyEvent.consume();
+                        return;
+                    }
+
                     if (keyEvent.getCode() == KeyCode.LEFT || keyEvent.getCode() == KeyCode.A) {
                         refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
                         keyEvent.consume();
@@ -108,14 +137,11 @@ public class GuiController implements Initializable {
                         refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
                         keyEvent.consume();
                     }
-                    else if (keyEvent.getCode() == KeyCode.UP || keyEvent.getCode() == KeyCode.W) {
-                        refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
-                        keyEvent.consume();
-                    }
                     else if (keyEvent.getCode() == KeyCode.DOWN || keyEvent.getCode() == KeyCode.S) {
                         moveDown(new MoveEvent(EventType.DOWN, EventSource.USER));
                         keyEvent.consume();
                     }
+
                     else if (keyEvent.getCode() == KeyCode.C) {
                         if (eventListener instanceof GameController gc) {
                             gc.onHoldEvent();
@@ -132,6 +158,7 @@ public class GuiController implements Initializable {
                         keyEvent.consume();
                     }
                 }
+
                 if (keyEvent.getCode() == KeyCode.N) {
                     newGame(null);
                 }
@@ -147,7 +174,6 @@ public class GuiController implements Initializable {
         if (pauseOverlay != null) {
             pauseOverlay.setVisible(false);
         }
-
         final Reflection reflection = new Reflection();
         reflection.setFraction(0.8);
         reflection.setTopOpacity(0.9);
@@ -259,8 +285,6 @@ public class GuiController implements Initializable {
 
     private void start40LinesMode() {
         timeElapsed = 0;
-        linesCleared = 0;
-        targetLines = 40;
         updateTimerDisplay();
         updateLinesDisplay();
 
@@ -353,8 +377,34 @@ public class GuiController implements Initializable {
     }
 
     private void showCompletionMessage() {
-        NotificationPanel completionPanel = new NotificationPanel("40 LINES COMPLETE!");
-        groupNotification.getChildren().add(completionPanel);
+        if (gameOverOverlay != null) {
+            gameOverOverlay.setVisible(true);
+            gameOverOverlay.getChildren().clear();
+
+            Label titleLabel = new Label("40 LINES CLEARED!");
+            titleLabel.getStyleClass().add("gameOverStyle");
+            titleLabel.setLayoutX(150);
+            titleLabel.setLayoutY(250);
+
+            Label subLabel1 = new Label("Press N for New Game");
+            subLabel1.getStyleClass().add("gameOverSubtext");
+            subLabel1.setLayoutX(310);
+            subLabel1.setLayoutY(330);
+
+            Label subLabel2 = new Label("Press ESC for Main Menu");
+            subLabel2.getStyleClass().add("gameOverSubtext");
+            subLabel2.setLayoutX(290);
+            subLabel2.setLayoutY(360);
+
+            gameOverOverlay.getChildren().addAll(titleLabel, subLabel1, subLabel2);
+        }
+
+        if (nextBrickContainer != null) {
+            nextBrickContainer.setVisible(false);
+        }
+        if (HoldBrickContainer != null) {
+            HoldBrickContainer.setVisible(false);
+        }
     }
 
     private void endBlitzMode() {
@@ -616,8 +666,6 @@ public class GuiController implements Initializable {
         MainMenuController.returnToMainMenu(gamePanel);
     }
 
-// ===== NEXT BRICK PANEL METHODS (UNCHANGED - KEEP AS IS) =====
-
     private void initNextBrickPanel(int[][] nextBrickData) {
         nextBrickRectangles = new Rectangle[4][4];
         for (int i = 0; i < 4; i++) {
@@ -678,7 +726,6 @@ public class GuiController implements Initializable {
         updateNextBrickDisplay(viewData.getNextBrickData());
     }
 
-// ===== HOLD BRICK PANEL METHODS (FIXED) =====
 
     private void initHoldBrickPanel() {
         holdBrickRectangles = new Rectangle[4][4];
