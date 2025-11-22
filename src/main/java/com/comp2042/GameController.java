@@ -39,8 +39,13 @@ public class GameController implements InputEventListener {
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
             }
-            if (board.createNewBrick()) {
-                viewGuiController.gameOver();
+            boolean gameOver = board.createNewBrick();
+            if (gameOver) {
+                if (gameMode == GameMode.ZEN) {
+                    board.clearBoard();
+                } else {
+                    viewGuiController.gameOver();
+                }
             }
 
             viewGuiController.refreshGameBackground(board.getBoardMatrix());

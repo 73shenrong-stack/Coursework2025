@@ -27,4 +27,6 @@ public interface Board {
     int getShadowYPosition();
 
     boolean holdBrick();
+
+    void clearBoard();
 }

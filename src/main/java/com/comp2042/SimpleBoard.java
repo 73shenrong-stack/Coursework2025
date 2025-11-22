@@ -202,4 +202,9 @@ public class SimpleBoard implements Board {
 
         return shadowY;
     }
+
+    @Override
+    public void clearBoard() {
+        currentGameMatrix = new int[width][height];
+    }
 }
