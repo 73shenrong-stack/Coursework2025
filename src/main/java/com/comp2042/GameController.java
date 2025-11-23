@@ -8,9 +8,13 @@ public class GameController implements InputEventListener {
 
     private final GameMode gameMode;
 
+    private final AudioManager audioManager = AudioManager.getInstance();
+
     public GameController(GuiController c, GameMode mode) {
         this.viewGuiController = c;
         this.gameMode = mode;
+
+        audioManager.playBackground(gameMode);
 
         board.createNewBrick();
         viewGuiController.setEventListener(this);
@@ -38,13 +42,15 @@ public class GameController implements InputEventListener {
             clearRow = board.clearRows();
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
+                audioManager.playSound("clear");
             }
-            boolean gameOver = board.createNewBrick();
-            if (gameOver) {
-                if (gameMode == GameMode.ZEN) {
-                    board.clearBoard();
-                } else {
+            boolean newBrickCollided = board.createNewBrick();
+            if (newBrickCollided) {
+                if (gameMode != GameMode.ZEN) {
+                    audioManager.playSound("gameover");
                     viewGuiController.gameOver();
+                } else {
+                    board.clearBoard();
                 }
             }
 
@@ -53,6 +59,7 @@ public class GameController implements InputEventListener {
         } else {
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(1);
+                audioManager.playSound("drop");
             }
         }
         return new DownData(clearRow, board.getViewData());
@@ -72,15 +79,25 @@ public class GameController implements InputEventListener {
 
     @Override
     public ViewData onRotateEvent(MoveEvent event) {
-        board.rotateLeftBrick();
+        if (board.rotateLeftBrick()) {
+            audioManager.playSound("rotate");
+        }
         return board.getViewData();
     }
 
 
     @Override
     public void createNewGame() {
+        audioManager.stopBackground();
+        audioManager.playBackground(gameMode);
+
+        // added this to prevent when start a new game, the panel still not refreshed
         board.newGame();
+        ViewData vd = board.getViewData();
         viewGuiController.refreshGameBackground(board.getBoardMatrix());
+        viewGuiController.refreshBrick(vd);
+        viewGuiController.updateNextBrick(vd);
+        viewGuiController.updateHeldBrick(vd);
     }
 
     public ViewData getCurrentViewData() {

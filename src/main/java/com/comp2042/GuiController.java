@@ -88,13 +88,14 @@ public class GuiController implements Initializable {
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
 
+    private final AudioManager audioManager = AudioManager.getInstance();
     private GameMode gameMode;
     private Timeline gameTimer;
     private int timeRemaining = 120;
     private int timeElapsed = 0;
 
     private int linesCleared = 0;
-    private int targetLines = 40;
+    private int targetLines = 30;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -273,10 +274,6 @@ public class GuiController implements Initializable {
                     if (timeRemaining <= 0) {
                         endBlitzMode();
                     }
-
-                    if (timeRemaining == 10 && modeTimerLabel != null) {
-                        modeTimerLabel.setTextFill(Color.RED);
-                    }
                 }
         ));
         gameTimer.setCycleCount(Timeline.INDEFINITE);
@@ -284,16 +281,10 @@ public class GuiController implements Initializable {
     }
 
     private void start40LinesMode() {
+        linesCleared = 0;
         timeElapsed = 0;
         updateTimerDisplay();
         updateLinesDisplay();
-
-        if (modeTimerLabel != null) {
-            modeTimerLabel.setTextFill(Color.YELLOW);
-        }
-        if (linesLabel != null) {
-            linesLabel.setTextFill(Color.YELLOW);
-        }
 
         gameTimer = new Timeline(new KeyFrame(
                 Duration.seconds(1),
@@ -361,18 +352,7 @@ public class GuiController implements Initializable {
 
         // Don't call gameOver() - just stop the game and show completion
         isGameOver.setValue(Boolean.TRUE);
-
-        if (linesLabel != null) {
-            linesLabel.setText("COMPLETE!");
-            linesLabel.setTextFill(Color.LIME);
-            linesLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: bold;");
-        }
-
-        if (modeTimerLabel != null) {
-            int minutes = timeElapsed / 60;
-            int seconds = timeElapsed % 60;
-            modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
-        }
+        audioManager.playSound("victory");
         showCompletionMessage();
     }
 
@@ -396,6 +376,8 @@ public class GuiController implements Initializable {
             subLabel2.setLayoutX(290);
             subLabel2.setLayoutY(360);
 
+            // add sound here
+
             gameOverOverlay.getChildren().addAll(titleLabel, subLabel1, subLabel2);
         }
 
@@ -415,6 +397,7 @@ public class GuiController implements Initializable {
             timeLine.stop();
         }
         gameOver();
+        audioManager.playSound("gameover");
     }
 
     private Duration getSpeedForMode(GameMode mode) {
@@ -569,6 +552,7 @@ public class GuiController implements Initializable {
             HoldBrickContainer.setVisible(false);
         }
         isGameOver.setValue(Boolean.TRUE);
+        audioManager.stopBackground();
     }
 
     public void newGame(ActionEvent actionEvent) {
@@ -624,6 +608,7 @@ public class GuiController implements Initializable {
             }
             if (pauseOverlay != null) {
                 pauseOverlay.setVisible(true);
+                pauseGameAudio();
             }
 
             if (nextBrickContainer != null) {
@@ -642,6 +627,7 @@ public class GuiController implements Initializable {
             }
             if (pauseOverlay != null) {
                 pauseOverlay.setVisible(false);
+                resumeGameAudio();
             }
             if (nextBrickContainer != null) {
                 nextBrickContainer.setVisible(true);
@@ -834,6 +820,7 @@ public class GuiController implements Initializable {
                 break;
             }
         }
+        audioManager.playSound("drop");
         downData = eventListener.onDownEvent(new MoveEvent(EventType.DOWN, EventSource.THREAD));
 
         if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
@@ -853,5 +840,13 @@ public class GuiController implements Initializable {
         if (eventListener instanceof GameController gc) {
             refreshGameBackground(gc.getCurrentBoardMatrix());
         }
+    }
+
+    public void pauseGameAudio() {
+        audioManager.pauseBackground();
+    }
+
+    public void resumeGameAudio() {
+        audioManager.resumeBackground();
     }
 }

@@ -36,8 +36,9 @@ public class SimpleBoard implements Board {
 
         if (heldBrick == null) {
             heldBrick = currentBrick;
-            hasHeld = true;
             createNewBrick();
+            hasHeld = true;
+
         } else {
             Brick temp = heldBrick;
             heldBrick = currentBrick;

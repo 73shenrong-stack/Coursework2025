@@ -101,6 +101,7 @@ public class MainMenuController implements Initializable {
             scene.getStylesheets().add(css);
 
             stage.setScene(scene);
+            AudioManager.getInstance().stopBackground();
         } catch (IOException e) {
             e.printStackTrace();
         }
