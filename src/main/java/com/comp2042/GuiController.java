@@ -16,6 +16,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
@@ -31,6 +33,9 @@ import javafx.animation.AnimationTimer;
 public class GuiController implements Initializable {
 
     private static final int BRICK_SIZE = 20;
+
+    @FXML
+    private StackPane rootPane;
 
     @FXML
     private GridPane gamePanel;
@@ -51,13 +56,13 @@ public class GuiController implements Initializable {
     private GridPane nextBrickPanel;
 
     @FXML
-    private Pane nextBrickContainer;
+    private VBox nextBrickContainer;
 
     @FXML
     private GridPane HoldBrickPanel;
 
     @FXML
-    private Pane HoldBrickContainer;
+    private VBox HoldBrickContainer;
 
     @FXML
     private Label modeTimerLabel;
@@ -95,11 +100,33 @@ public class GuiController implements Initializable {
     private int timeElapsed = 0;
 
     private int linesCleared = 0;
-    private int targetLines = 30;
+    private int targetLines = 40;
+
+    private final Color[] ARCADE_COLORS = {
+            Color.TRANSPARENT,
+            Color.web("#00FFFF"),
+            Color.web("#FF2E97"),
+            Color.web("#39FF14"),
+            Color.web("#FFEA00"),
+            Color.web("#FF3131"),
+            Color.web("#00D9FF"),
+            Color.web("#FF8C00")
+    };
+
+
+    private final Color[] ZEN_COLORS = {
+            Color.TRANSPARENT,
+            Color.web("#FFB997"),
+            Color.web("#F49F9F"),
+            Color.web("#F6D8AE"),
+            Color.web("#FFD580"),
+            Color.web("#D3BBDD"),
+            Color.web("#A0C4E2"),
+            Color.web("#E5C3A6")
+    };
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Font.loadFont(getClass().getClassLoader().getResource("digital.ttf").toExternalForm(), 38);
         gamePanel.setFocusTraversable(true);
         gamePanel.requestFocus();
 
@@ -118,11 +145,9 @@ public class GuiController implements Initializable {
                         refreshBrick(eventListener.onRotateEvent(new MoveEvent(EventType.ROTATE, EventSource.USER)));
 
                         if (pressedKeys.contains(KeyCode.LEFT) || pressedKeys.contains(KeyCode.A)) {
-                            // FIX: Changed from onRotateEvent to onLeftEvent
                             refreshBrick(eventListener.onLeftEvent(new MoveEvent(EventType.LEFT, EventSource.USER)));
                         }
                         else if (pressedKeys.contains(KeyCode.RIGHT) || pressedKeys.contains(KeyCode.D)) {
-                            // FIX: Changed from onRotateEvent to onRightEvent
                             refreshBrick(eventListener.onRightEvent(new MoveEvent(EventType.RIGHT, EventSource.USER)));
                         }
 
@@ -183,6 +208,18 @@ public class GuiController implements Initializable {
 
     public void initGameView(int[][] boardMatrix, ViewData brick, GameMode mode) {
         this.gameMode = mode;
+        if (rootPane != null) {
+            rootPane.getStylesheets().clear();
+            String cssFile = (mode == GameMode.ZEN) ? "zen_style.css" : "arcade_style.css";
+            URL cssUrl = getClass().getResource(cssFile);
+            if (cssUrl == null) {
+                cssUrl = getClass().getResource("/" + cssFile);
+            }
+            if (cssUrl != null) {
+                rootPane.getStylesheets().add(cssUrl.toExternalForm());
+            }
+        }
+
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = 2; i < boardMatrix.length; i++) {
             for (int j = 0; j < boardMatrix[i].length; j++) {
@@ -218,7 +255,7 @@ public class GuiController implements Initializable {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(BRICK_SIZE, BRICK_SIZE);
                 rectangle.setFill(Color.TRANSPARENT);
-                rectangle.setOpacity(0.3); // Make shadow semi-transparent
+                rectangle.setOpacity(0.6);
                 shadowRectangles[i][j] = rectangle;
                 gamePanel.add(rectangle, j, i);
             }
@@ -320,12 +357,12 @@ public class GuiController implements Initializable {
                 // Countdown timer for Blitz
                 int minutes = timeRemaining / 60;
                 int seconds = timeRemaining % 60;
-                modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
+                modeTimerLabel.setText(String.format("%d : %02d", minutes, seconds));
             } else {
                 // Counting up timer for 40 Lines and Zen
                 int minutes = timeElapsed / 60;
                 int seconds = timeElapsed % 60;
-                modeTimerLabel.setText(String.format("Time: %d:%02d", minutes, seconds));
+                modeTimerLabel.setText(String.format("%d : %02d", minutes, seconds));
             }
         }
     }
@@ -334,10 +371,10 @@ public class GuiController implements Initializable {
         if (linesLabel != null) {
             if (gameMode == GameMode.FORTY_LINES) {
                 // Show progress towards 40 lines
-                linesLabel.setText(String.format("Lines: %d / %d", linesCleared, targetLines));
+                linesLabel.setText(String.format("%d / %d", linesCleared, targetLines));
             } else {
                 // Show total lines cleared for Blitz and Zen
-                linesLabel.setText(String.format("Lines: %d", linesCleared));
+                linesLabel.setText(String.format("%d", linesCleared));
             }
         }
     }
@@ -350,8 +387,8 @@ public class GuiController implements Initializable {
             gameTimer.stop();
         }
 
-        // Don't call gameOver() - just stop the game and show completion
         isGameOver.setValue(Boolean.TRUE);
+        audioManager.stopBackground();
         audioManager.playSound("victory");
         showCompletionMessage();
     }
@@ -361,24 +398,24 @@ public class GuiController implements Initializable {
             gameOverOverlay.setVisible(true);
             gameOverOverlay.getChildren().clear();
 
+            VBox box = new VBox(20);
+            box.setStyle("-fx-alignment: center;");
+
             Label titleLabel = new Label("40 LINES CLEARED!");
-            titleLabel.getStyleClass().add("gameOverStyle");
-            titleLabel.setLayoutX(150);
-            titleLabel.setLayoutY(250);
+            titleLabel.getStyleClass().add("overlay-title");
 
             Label subLabel1 = new Label("Press N for New Game");
-            subLabel1.getStyleClass().add("gameOverSubtext");
-            subLabel1.setLayoutX(310);
-            subLabel1.setLayoutY(330);
+            subLabel1.getStyleClass().add("overlay-subtext");
 
             Label subLabel2 = new Label("Press ESC for Main Menu");
-            subLabel2.getStyleClass().add("gameOverSubtext");
-            subLabel2.setLayoutX(290);
-            subLabel2.setLayoutY(360);
+            subLabel2.getStyleClass().add("overlay-subtext");
 
-            // add sound here
+            box.getChildren().addAll(titleLabel, subLabel1, subLabel2);
+            gameOverOverlay.getChildren().add(box);
 
-            gameOverOverlay.getChildren().addAll(titleLabel, subLabel1, subLabel2);
+            // Center logic
+            box.layoutXProperty().bind(gameOverOverlay.widthProperty().subtract(box.widthProperty()).divide(2));
+            box.layoutYProperty().bind(gameOverOverlay.heightProperty().subtract(box.heightProperty()).divide(2));
         }
 
         if (nextBrickContainer != null) {
@@ -413,43 +450,20 @@ public class GuiController implements Initializable {
     }
 
     private Paint getFillColor(int i) {
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.TRANSPARENT;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.BLUEVIOLET;
-                break;
-            case 3:
-                returnPaint = Color.DARKGREEN;
-                break;
-            case 4:
-                returnPaint = Color.YELLOW;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.BEIGE;
-                break;
-            case 7:
-                returnPaint = Color.BURLYWOOD;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
-        }
-        return returnPaint;
-    }
+        if (i == 0) return Color.TRANSPARENT;
+        if (i < 0 || i > 7) return Color.WHITE;
 
+        // Use the selected theme array
+        if (gameMode == GameMode.ZEN) {
+            return ZEN_COLORS[i];
+        } else {
+            return ARCADE_COLORS[i];
+        }
+    }
 
     public void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
-            // 1. CLEAR the old falling piece (the 4×4 rectangles)
+            // 1. CLEAR the old falling piece
             for (Rectangle[] row : rectangles) {
                 for (Rectangle r : row) {
                     r.setFill(Color.TRANSPARENT);
@@ -458,7 +472,6 @@ public class GuiController implements Initializable {
                     }
                 }
             }
-
 
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
@@ -500,7 +513,6 @@ public class GuiController implements Initializable {
         if (isPause.getValue() == Boolean.FALSE) {
             DownData downData = eventListener.onDownEvent(event);
 
-            // Handle notifications for cleared lines
             if (downData.getClearRow() != null && downData.getClearRow().getLinesRemoved() > 0) {
 
                 linesCleared += downData.getClearRow().getLinesRemoved();
@@ -532,7 +544,7 @@ public class GuiController implements Initializable {
     }
 
     public void bindScore(IntegerProperty integerProperty) {
-        scoreLabel.textProperty().bind(integerProperty.asString("Score: %d"));
+        scoreLabel.textProperty().bind(integerProperty.asString("%d"));
     }
 
     public void gameOver() {
@@ -593,7 +605,6 @@ public class GuiController implements Initializable {
     }
 
     public void pauseGame(ActionEvent actionEvent) {
-        // Don't allow pausing when game is over
         if (isGameOver.getValue() == Boolean.TRUE) {
             return;
         }
@@ -640,7 +651,6 @@ public class GuiController implements Initializable {
     }
 
     private void returnToMainMenu() {
-        // Stop all timers
         if (timeLine != null) {
             timeLine.stop();
         }
@@ -648,7 +658,6 @@ public class GuiController implements Initializable {
             gameTimer.stop();
         }
 
-        // Use the static method from MainMenuController
         MainMenuController.returnToMainMenu(gamePanel);
     }
 
@@ -728,7 +737,6 @@ public class GuiController implements Initializable {
     }
 
     public void updateHeldBrick(ViewData viewData) {
-        // Clear display
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 holdBrickRectangles[i][j].setFill(Color.TRANSPARENT);
@@ -740,7 +748,6 @@ public class GuiController implements Initializable {
         int[][] heldBrickData = viewData.getHeldBrickData();
         if (heldBrickData == null) return;
 
-        // Find brick bounds - IDENTICAL to next brick
         int minRow = 4, maxRow = -1, minCol = 4, maxCol = -1;
         for (int i = 0; i < heldBrickData.length; i++) {
             for (int j = 0; j < heldBrickData[i].length; j++) {
@@ -757,11 +764,9 @@ public class GuiController implements Initializable {
             int brickHeight = maxRow - minRow + 1;
             int brickWidth = maxCol - minCol + 1;
 
-            // IDENTICAL centering calculation as next brick
             int offsetX = (4 - brickWidth) / 2;
             int offsetY = (4 - brickHeight) / 2;
 
-            // Draw brick - IDENTICAL loop as next brick
             for (int i = minRow; i <= maxRow; i++) {
                 for (int j = minCol; j <= maxCol; j++) {
                     int targetY = offsetY + (i - minRow);
@@ -831,7 +836,6 @@ public class GuiController implements Initializable {
             groupNotification.getChildren().add(notificationPanel);
             notificationPanel.showScore(groupNotification.getChildren());
 
-            // Check 40 Lines mode completion
             if (gameMode == GameMode.FORTY_LINES && linesCleared >= targetLines) {
                 end40LinesMode();
                 return;

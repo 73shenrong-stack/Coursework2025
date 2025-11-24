@@ -1,99 +1,126 @@
-/* Main Container */
 .main-menu-container {
-    -fx-background-color: linear-gradient(to bottom, #0f0c29, #302b63, #24243e);
+    -fx-background-color: linear-gradient(to bottom,
+        #a8e6cf 0%,
+        #dcedc1 30%,
+        #ffd3b6 70%,
+        #ffaaa5 100%);
 }
 
-/* Game Title */
 .game-title {
-    -fx-font-size: 60px;
+    -fx-font-size: 78px;
     -fx-font-weight: bold;
-    -fx-text-fill: linear-gradient(to right, #00d4ff, #00ffb3);
-    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.8), 20, 0.5, 0, 0);
-    -fx-font-family: "Arial Black", sans-serif;
+    -fx-text-fill: linear-gradient(to right,
+        #ff2e97 0%,
+        #7b2cbf 20%,
+        #00d9ff 40%,
+        #90cbb8 60%,
+        #a8e6cf 80%,
+        #ffd89b 100%);
+    -fx-effect: dropshadow(gaussian, rgba(255, 46, 151, 0.3), 12, 0.4, -3, 0),
+                dropshadow(gaussian, rgba(168, 230, 207, 0.3), 12, 0.4, 3, 0);
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-letter-spacing: 6px;
 }
 
-/* Mode Selection Label */
 .mode-label {
     -fx-font-size: 20px;
-    -fx-text-fill: #ffffff;
-    -fx-font-weight: bold;
-    -fx-opacity: 0.7;
-    -fx-letter-spacing: 2px;
+    -fx-text-fill: #6A7A8A;
+    -fx-font-weight: 700;
+    -fx-opacity: 0.9;
+    -fx-letter-spacing: 4px;
+    -fx-font-family: "Segoe UI Semibold", "Arial", sans-serif;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.6), 4, 0.3, 0, 1);
 }
 
-/* Button Container */
 .button-container {
-    -fx-padding: 10 0 10 0;
+    -fx-padding: 15 0 15 0;
 }
 
-/* Mode Card Styling */
 .mode-card {
-    -fx-background-color: rgba(255, 255, 255, 0.1);
-    -fx-background-radius: 15;
-    -fx-padding: 20 25 20 25;
+    -fx-background-color: rgba(255, 255, 255, 0.45);
+    -fx-background-radius: 20;
+    -fx-padding: 22 28 22 28;
     -fx-cursor: hand;
-    -fx-border-color: rgba(255, 255, 255, 0.2);
-    -fx-border-width: 2;
-    -fx-border-radius: 15;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.3, 0, 5);
+    -fx-border-color: rgba(255, 255, 255, 0.7);
+    -fx-border-width: 3;
+    -fx-border-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(176, 212, 232, 0.5), 18, 0.4, 0, 6),
+                innershadow(gaussian, rgba(255, 255, 255, 0.3), 12, 0.3, 0, -2);
     -fx-alignment: CENTER_LEFT;
 }
 
 .mode-card:hover {
-    -fx-background-color: rgba(0, 212, 255, 0.2);
-    -fx-border-color: #00d4ff;
-    -fx-effect: dropshadow(gaussian, rgba(0, 212, 255, 0.6), 15, 0.5, 0, 5);
-    -fx-scale-x: 1.02;
-    -fx-scale-y: 1.02;
+    -fx-background-color: rgba(255, 255, 255, 0.65);
+    -fx-border-color: rgba(255, 255, 255, 0.9);
+    -fx-border-width: 3.5;
+    -fx-effect: dropshadow(gaussian, rgba(168, 230, 207, 0.7), 22, 0.5, 0, 8),
+                dropshadow(gaussian, rgba(255, 211, 182, 0.5), 20, 0.5, 0, 8);
+    -fx-scale-x: 1.04;
+    -fx-scale-y: 1.04;
 }
 
 .mode-card:pressed {
-    -fx-background-color: rgba(0, 212, 255, 0.3);
-    -fx-translate-y: 2;
+    -fx-background-color: rgba(255, 255, 255, 0.55);
+    -fx-translate-y: 3;
+    -fx-effect: dropshadow(gaussian, rgba(176, 212, 232, 0.4), 12, 0.4, 0, 4);
 }
 
-/* Mode Icon */
 .mode-icon {
-    -fx-font-size: 40px;
-    -fx-min-width: 50px;
+    -fx-font-size: 50px;
+    -fx-min-width: 65px;
     -fx-alignment: center;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #ffaaa5;
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 165, 0.6), 12, 0.5, 0, 0),
+                dropshadow(gaussian, rgba(255, 211, 182, 0.4), 10, 0.4, 0, 0);
 }
 
-/* Mode Title */
 .mode-title {
-    -fx-font-size: 22px;
+    -fx-font-size: 28px;
     -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
+    -fx-text-fill: #5A6B7A;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.8), 4, 0.3, 0, 1);
+    -fx-font-family: "Segoe UI Semibold", "Arial", sans-serif;
+    -fx-letter-spacing: 2px;
 }
 
-/* Mode Description */
 .mode-description {
-    -fx-font-size: 13px;
-    -fx-text-fill: #b8b8b8;
+    -fx-font-size: 14px;
+    -fx-text-fill: #6A7A8A;
     -fx-wrap-text: true;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-opacity: 0.9;
+    -fx-letter-spacing: 0.5px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 255, 255, 0.5), 2, 0.2, 0, 1);
 }
 
-/* Quit Button */
 .quit-button {
-    -fx-background-color: rgba(255, 70, 70, 0.8);
+    -fx-background-color: rgba(255, 170, 165, 0.7);
     -fx-text-fill: white;
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 10;
+    -fx-background-radius: 14;
     -fx-cursor: hand;
-    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 8, 0.3, 0, 4);
-    -fx-padding: 12 30 12 30;
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 165, 0.5), 14, 0.4, 0, 5),
+                innershadow(gaussian, rgba(255, 255, 255, 0.2), 8, 0.2, 0, -1);
+    -fx-padding: 14 35 14 35;
+    -fx-font-family: "Segoe UI Semibold", "Arial", sans-serif;
+    -fx-letter-spacing: 2px;
+    -fx-border-color: rgba(255, 255, 255, 0.6);
+    -fx-border-width: 2.5;
+    -fx-border-radius: 14;
 }
 
 .quit-button:hover {
-    -fx-background-color: rgba(255, 50, 50, 1);
-    -fx-effect: dropshadow(gaussian, rgba(255, 70, 70, 0.6), 12, 0.5, 0, 5);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
+    -fx-background-color: rgba(255, 150, 145, 0.85);
+    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 165, 0.7), 18, 0.5, 0, 7),
+                dropshadow(gaussian, rgba(168, 230, 207, 0.4), 16, 0.4, 0, 7);
+    -fx-scale-x: 1.06;
+    -fx-scale-y: 1.06;
 }
 
 .quit-button:pressed {
-    -fx-background-color: rgba(200, 40, 40, 1);
-    -fx-translate-y: 2;
+    -fx-background-color: rgba(240, 140, 135, 1);
+    -fx-translate-y: 3;
+    -fx-effect: dropshadow(gaussian, rgba(255, 170, 165, 0.4), 10, 0.3, 0, 3);
 }

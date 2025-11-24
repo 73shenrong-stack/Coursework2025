@@ -28,7 +28,7 @@
     <VBox alignment="CENTER" spacing="15" styleClass="button-container">
 
         <!-- Blitz Mode Button -->
-        <Button fx:id="blitzModeButton" onAction="#onBlitzMode" styleClass="mode-card" prefWidth="400" maxHeight="90">
+        <Button fx:id="blitzModeButton" onAction="#onBlitzMode" styleClass="mode-card" prefWidth="400" maxHeight="60">
             <graphic>
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Label text="⚡" styleClass="mode-icon"/>
@@ -41,7 +41,7 @@
         </Button>
 
         <!-- 40 Lines Mode Button -->
-        <Button fx:id="fortyLinesModeButton" onAction="#onFortyLinesMode" styleClass="mode-card" prefWidth="400" maxHeight="90">
+        <Button fx:id="fortyLinesModeButton" onAction="#onFortyLinesMode" styleClass="mode-card" prefWidth="400" maxHeight="60">
             <graphic>
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Label text="🎯" styleClass="mode-icon"/>
@@ -54,7 +54,7 @@
         </Button>
 
         <!-- Zen Mode Button -->
-        <Button fx:id="zenModeButton" onAction="#onZenMode" styleClass="mode-card" prefWidth="400" maxHeight="90">
+        <Button fx:id="zenModeButton" onAction="#onZenMode" styleClass="mode-card" prefWidth="400" maxHeight="60">
             <graphic>
                 <HBox alignment="CENTER_LEFT" spacing="15">
                     <Label text="🧘" styleClass="mode-icon"/>
@@ -66,8 +66,6 @@
             </graphic>
         </Button>
     </VBox>
-
-    <Region VBox.vgrow="SOMETIMES" minHeight="20"/>
     <Button fx:id="exitButton" text="Quit Game" onAction="#onExit" prefWidth="300" styleClass="quit-button"/>
 
 </VBox>

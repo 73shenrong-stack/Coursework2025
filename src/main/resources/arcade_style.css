@@ -1,0 +1,153 @@
+.root {
+    -fx-background-color: linear-gradient(to bottom, #0a0014, #1a0f2e, #2a1845);
+}
+
+
+.section-title {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 24px;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 3px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.4), 6, 0.3, 0, 0);
+}
+
+.stat-label {
+    -fx-text-fill: #e0d4ff;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+    -fx-letter-spacing: 1px;
+    -fx-opacity: 0.95;
+}
+
+.stat-value {
+    -fx-text-fill: #ffea00;
+    -fx-font-size: 34px;
+    -fx-font-weight: 600;
+    -fx-font-family: "Segoe UI Semibold", "Arial", sans-serif;
+    -fx-letter-spacing: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 234, 0, 0.5), 8, 0.3, 0, 0);
+}
+
+.gameBoard {
+    -fx-border-color: linear-gradient(to bottom, #ff2e97, #7b2cbf, #00d9ff);
+    -fx-border-width: 10px;
+    -fx-border-radius: 14px;
+    -fx-background-color: rgba(10, 0, 20, 0.4);
+    -fx-background-radius: 15px;
+    -fx-effect: dropshadow(gaussian, rgba(123, 44, 191, 0.7), 20, 0.6, 0, 0);
+}
+
+.brick-container {
+    -fx-background-color: rgba(26, 15, 46, 0.85);
+    -fx-background-radius: 22px;
+    -fx-border-radius: 20px;
+    -fx-border-color: #ff2e97;
+    -fx-border-width: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 46, 151, 0.8), 15, 0.6, 0, 0);
+}
+
+.modern-controls-bar {
+    -fx-background-color: rgba(10, 5, 30, 0.85);
+    -fx-padding: 20px 40px;
+    -fx-border-color: linear-gradient(to right, #00D9FF, #FF2E97);
+    -fx-border-width: 0 0 3px 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.4), 15, 0.4, 0, 8);
+}
+
+.control-label {
+    -fx-text-fill: #cccccc;
+    -fx-font-family: "Segoe UI", Arial, sans-serif;
+    -fx-font-size: 12px;
+    -fx-font-weight: 600;
+    -fx-letter-spacing: 2px;
+    -fx-opacity: 0.9;
+}
+
+.key-icon {
+    -fx-background-radius: 8px;
+    -fx-background-color: rgba(100, 50, 180, 0.6);
+    -fx-border-color: #FF2E97;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+    -fx-pref-width: 36px;
+    -fx-pref-height: 36px;
+    -fx-alignment: CENTER;
+}
+
+.key-wide {
+    -fx-text-fill: #FFEA00;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Consolas", monospace;
+    -fx-background-color: rgba(100, 50, 180, 0.7);
+    -fx-background-radius: 10px;
+    -fx-padding: 8 16;
+    -fx-border-color: #FF2E97;
+    -fx-border-width: 2.5px;
+    -fx-border-radius: 10px;
+    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.4), 6, 0, 0, 2);
+}
+
+.key-normal {
+    -fx-text-fill: #FFEA00;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Consolas", monospace;
+    -fx-background-color: rgba(100, 50, 180, 0.6);
+    -fx-background-radius: 8px;
+    -fx-padding: 6 14;
+    -fx-border-color: #FF2E97;
+    -fx-border-width: 2px;
+    -fx-border-radius: 8px;
+}
+
+.bonusStyle {
+    -fx-text-fill: #00D9FF;
+    -fx-font-size: 30px;
+    -fx-font-family: "Segoe UI Semibold", "Arial Black", sans-serif;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+    -fx-effect:
+        dropshadow(gaussian, rgba(0, 217, 255, 0.6), 22, 0.65, 0, 6),
+        dropshadow(gaussian, rgba(255, 255, 255, 0.35), 12, 0.4, 0, 2);
+}
+
+.overlay-pane {
+    -fx-background-color: rgba(10, 0, 20, 0.94);
+}
+
+.overlay-title {
+    -fx-text-fill: #ff2e97;
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 68px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 6px;
+    -fx-effect: dropshadow(gaussian, rgba(255, 46, 151, 1.0), 25, 0.7, 0, 0);
+}
+
+.overlay-subtext {
+    -fx-text-fill: #00d9ff;
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 217, 255, 0.9), 14, 0.6, 0, 0);
+}
+
+.overlay-title {
+    -fx-font-family: "Segoe UI Light", "Calibri Light", sans-serif;
+    -fx-font-size: 56px;
+    -fx-font-weight: lighter;
+    -fx-fill: #ffffff;
+
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.0, 0, 5);
+}
+
+.overlay-subtext {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 20px;
+    -fx-fill: rgba(255, 255, 255, 0.9);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
+}
+
