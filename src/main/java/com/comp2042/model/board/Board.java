@@ -1,0 +1,36 @@
+package com.comp2042.model.board;
+
+import com.comp2042.model.data.LineClearResult;
+import com.comp2042.model.game.Score;
+import com.comp2042.model.data.ViewData;
+
+public interface Board {
+
+    boolean moveBrickDown();
+
+    boolean moveBrickLeft();
+
+    boolean moveBrickRight();
+
+    boolean rotateLeftBrick();
+
+    boolean createNewBrick();
+
+    int[][] getBoardMatrix();
+
+    ViewData getViewData();
+
+    void mergeBrickToBackground();
+
+    LineClearResult clearRows();
+
+    Score getScore();
+
+    void newGame();
+
+    int getShadowYPosition();
+
+    boolean holdBrick();
+
+    void clearBoard();
+}

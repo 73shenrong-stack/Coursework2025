@@ -30,7 +30,7 @@
 }
 
 .gameBoard {
-    -fx-background-color: rgba(255, 255, 255, 0.25);
+    -fx-background-color: rgba(255, 255, 255, 0.3);
     -fx-background-radius: 24px;
     -fx-border-color: rgba(255, 255, 255, 0.7);
     -fx-border-width: 10px;
@@ -39,18 +39,16 @@
 }
 
 .brick-container {
-    -fx-background-color: rgba(255, 255, 255, 0.3);
+    -fx-background-color: rgba(255, 255, 255, 0.25);
     -fx-background-radius: 20px;
     -fx-border-radius: 20px;
-    -fx-border-color: rgba(255, 255, 255, 0.5);
+    -fx-border-color: rgba(255, 255, 255, 0.6);
     -fx-border-width: 4px;
-    -fx-effect:
-            dropshadow(gaussian, rgba(176, 212, 232, 0.7), 20, 0.4, 0, 8),
-            innershadow(gaussian, rgba(0,0,0,0.06), 10, 0.3, 0, 2);
+    -fx-effect: innershadow(gaussian, rgba(255,255,255,0.3), 6, 0.3, 0, 2);
 }
 
 .modern-controls-bar {
-    -fx-background-color: rgba(255, 255, 255, 0.22);
+    -fx-background-color: rgba(255, 255, 255, 0.25);
     -fx-padding: 22px 40px;
     -fx-border-color: #89A9C2;
     -fx-border-width: 0 0 3px 0;
@@ -66,17 +64,6 @@
     -fx-opacity: 0.95;
 }
 
-.key-icon {
-    -fx-pref-width: 44px;
-    -fx-pref-height: 44px;
-    -fx-background-radius: 14px;
-    -fx-background-color: rgba(255, 255, 255, 0.35);
-    -fx-border-color: rgba(255, 255, 255, 0.7);
-    -fx-border-width: 2.5px;
-    -fx-border-radius: 14px;
-    -fx-effect: innershadow(gaussian, rgba(0,0,0,0.1), 8, 0, 0, 3);
-}
-
 .key-wide {
     -fx-text-fill: #ffaaa5;
     -fx-font-size: 13px;
@@ -85,23 +72,10 @@
     -fx-background-color: rgba(255, 255, 255, 0.38);
     -fx-background-radius: 10px;
     -fx-padding: 8 16;
-    -fx-border-color: rgba(255, 255, 255, 0.8);
+    -fx-border-color: rgba(255, 182, 150, 0.5);
     -fx-border-width: 2.5px;
     -fx-border-radius: 10px;
     -fx-effect: innershadow(gaussian, rgba(0,0,0,0.12), 10, 0, 0, 3);
-}
-
-.key-normal {
-    -fx-text-fill: #ffaaa5;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-font-family: "Consolas", "Courier New", monospace;
-    -fx-background-color: rgba(255, 255, 255, 0.35);
-    -fx-background-radius: 8px;
-    -fx-padding: 6 14;
-    -fx-border-color: rgba(255, 255, 255, 0.7);
-    -fx-border-width: 2px;
-    -fx-border-radius: 8px;
 }
 
 .bonusStyle {

@@ -65,17 +65,6 @@
     -fx-opacity: 0.9;
 }
 
-.key-icon {
-    -fx-background-radius: 8px;
-    -fx-background-color: rgba(100, 50, 180, 0.6);
-    -fx-border-color: #FF2E97;
-    -fx-border-width: 2px;
-    -fx-border-radius: 8px;
-    -fx-pref-width: 36px;
-    -fx-pref-height: 36px;
-    -fx-alignment: CENTER;
-}
-
 .key-wide {
     -fx-text-fill: #FFEA00;
     -fx-font-size: 13px;
@@ -88,19 +77,6 @@
     -fx-border-width: 2.5px;
     -fx-border-radius: 10px;
     -fx-effect: innershadow(gaussian, rgba(0,0,0,0.4), 6, 0, 0, 2);
-}
-
-.key-normal {
-    -fx-text-fill: #FFEA00;
-    -fx-font-size: 14px;
-    -fx-font-weight: bold;
-    -fx-font-family: "Consolas", monospace;
-    -fx-background-color: rgba(100, 50, 180, 0.6);
-    -fx-background-radius: 8px;
-    -fx-padding: 6 14;
-    -fx-border-color: #FF2E97;
-    -fx-border-width: 2px;
-    -fx-border-radius: 8px;
 }
 
 .bonusStyle {
