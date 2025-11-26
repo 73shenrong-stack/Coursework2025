@@ -28,4 +28,8 @@ public final class GameConstants {
     // Spawn position
     public static final int SPAWN_X = 3;
     public static final int SPAWN_Y = 0;
+
+    private GameConstants() {
+        throw new AssertionError("Cannot instantiate this class");
+    }
 }

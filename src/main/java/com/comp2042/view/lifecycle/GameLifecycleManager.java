@@ -43,7 +43,11 @@ public class GameLifecycleManager {
     public void startNewGame() {
         stopAllTimelines();
 
+        isPaused.setValue(false);
+        isGameOver.setValue(false);
+
         uiStateManager.hideGameOverOverlay();
+        uiStateManager.hidePauseOverlay();
         uiStateManager.showGameUI();
 
         eventListener.createNewGame();
@@ -51,9 +55,6 @@ public class GameLifecycleManager {
         // Restart timers
         timerManager.startTimer(currentGameMode);
         gameLoopTimeline.play();
-
-        isPaused.setValue(false);
-        isGameOver.setValue(false);
     }
 
     // Pause the game
