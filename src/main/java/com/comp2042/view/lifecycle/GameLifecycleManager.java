@@ -4,6 +4,9 @@ import com.comp2042.audio.AudioManager;
 import com.comp2042.controller.InputEventListener;
 import com.comp2042.controller.MainMenuController;
 import com.comp2042.model.game.GameMode;
+import com.comp2042.model.game.GameRecords;
+import com.comp2042.model.game.RecordsPersistence;
+import com.comp2042.model.game.Score;
 import com.comp2042.view.timer.GameModeTimerManager;
 import com.comp2042.view.ui.UIStateManager;
 import javafx.animation.Timeline;
@@ -25,8 +28,10 @@ public class GameLifecycleManager {
     private final GameMode currentGameMode;
     private final AudioManager audioManager;
     private final Node sceneNode;
+    private final Score score;
+    private final GameRecords records;
 
-    public GameLifecycleManager(InputEventListener eventListener, Timeline gameLoopTimeline, GameModeTimerManager timerManager, UIStateManager uiStateManager, BooleanProperty isPaused, BooleanProperty isGameOver, GameMode currentGameMode, Node sceneNode) {
+    public GameLifecycleManager(InputEventListener eventListener, Timeline gameLoopTimeline, GameModeTimerManager timerManager, UIStateManager uiStateManager, BooleanProperty isPaused, BooleanProperty isGameOver, GameMode currentGameMode, Node sceneNode, Score score) {
         this.eventListener = eventListener;
         this.gameLoopTimeline = gameLoopTimeline;
         this.timerManager = timerManager;
@@ -36,6 +41,8 @@ public class GameLifecycleManager {
         this.currentGameMode = currentGameMode;
         this.audioManager = AudioManager.getInstance();
         this.sceneNode = sceneNode;
+        this.score = score;
+        this.records = RecordsPersistence.loadRecords();
     }
 
     // Start a new game
@@ -95,7 +102,13 @@ public class GameLifecycleManager {
         stopAllTimelines();
         isGameOver.setValue(true);
         audioManager.stopBackground();
-        uiStateManager.showGameOverOverlay();
+
+        int finalScore = score.scoreProperty().get();
+        int finalTime = timerManager.getCurrentTime();
+
+        boolean isNewRecord = updateRecords(finalScore, finalTime);
+
+        uiStateManager.showGameOverOverlay(currentGameMode, finalScore, finalTime, records, isNewRecord);
         uiStateManager.hideGameUI();
     }
 
@@ -106,7 +119,13 @@ public class GameLifecycleManager {
         isGameOver.setValue(true);
         audioManager.stopBackground();
         audioManager.playSound("gameover");
-        uiStateManager.showGameOverOverlay();
+
+        int finalScore = score.scoreProperty().get();
+        int finalTime = timerManager.getCurrentTime();
+
+        boolean isNewRecord = updateRecords(finalScore, finalTime);
+
+        uiStateManager.showGameOverOverlay(currentGameMode, finalScore, finalTime, records, isNewRecord);
         uiStateManager.hideGameUI();
     }
 
@@ -117,8 +136,37 @@ public class GameLifecycleManager {
         isGameOver.setValue(true);
         audioManager.stopBackground();
         audioManager.playSound("victory");
-        uiStateManager.showCompletionOverlay();
+
+        int finalScore = score.scoreProperty().get();
+        int finalTime = timerManager.getCurrentTime();
+
+        boolean isNewRecord = updateRecords(finalScore, finalTime);
+
+        uiStateManager.showCompletionOverlay(finalScore, finalTime, records, isNewRecord);
         uiStateManager.hideGameUI();
+    }
+
+    // Update records based on game mode
+    private boolean updateRecords(int finalScore, int finalTime) {
+        boolean isNewRecord = false;
+
+        switch (currentGameMode) {
+            case BLITZ:
+                isNewRecord = records.updateBlitzRecord(finalScore, finalTime);
+                break;
+            case FORTY_LINES:
+                isNewRecord = records.updateFortyLinesRecord(finalScore, finalTime);
+                break;
+            case ZEN:
+                isNewRecord = records.updateZenRecord(finalScore, finalTime);
+                break;
+        }
+
+        if (isNewRecord) {
+            RecordsPersistence.saveRecords(records);
+        }
+
+        return isNewRecord;
     }
 
     // Return to main menu
@@ -140,4 +188,8 @@ public class GameLifecycleManager {
         }
     }
 
+    // Get current records
+    public GameRecords getRecords() {
+        return records;
+    }
 }

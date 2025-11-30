@@ -10,6 +10,7 @@ import com.comp2042.model.data.MoveDownResult;
 import com.comp2042.model.data.MoveEvent;
 import com.comp2042.model.data.ViewData;
 import com.comp2042.model.game.GameMode;
+import com.comp2042.model.game.Score;
 import com.comp2042.view.GameViewController;
 
 /**
@@ -35,8 +36,6 @@ public class GameController implements InputEventListener {
         viewController.updateHeldBrick(board.getViewData());
         viewController.bindScore(board.getScore().scoreProperty());
     }
-
-    // Handle hold brick action
 
     public void onHoldEvent() {
         if (board.holdBrick()) {
@@ -117,15 +116,16 @@ public class GameController implements InputEventListener {
         viewController.updateHeldBrick(vd);
     }
 
-    // Get current view data
-
     public ViewData getCurrentViewData() {
         return board.getViewData();
     }
 
-    // Get current board matrix
-
     public int[][] getCurrentBoardMatrix() {
         return board.getBoardMatrix();
+    }
+
+    // New method to get Score object
+    public Score getScore() {
+        return board.getScore();
     }
 }

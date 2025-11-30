@@ -141,8 +141,8 @@ public class GameViewController implements Initializable {
                         actionHandler.requestFocus();
                     }
                 });
-        // Initialize lifecycle manager
-        lifecycleManager = new GameLifecycleManager(eventListener, gameLoopTimeline, timerManager, uiStateManager, isPaused, isGameOver, currentGameMode, gamePanel
+        // Initialize lifecycle manager with Score object
+        lifecycleManager = new GameLifecycleManager(eventListener, gameLoopTimeline, timerManager, uiStateManager, isPaused, isGameOver, currentGameMode, gamePanel, ((com.comp2042.controller.GameController)eventListener).getScore()
         );
         // Set lifecycle callbacks on timer manager
         timerManager.setOnBlitzComplete(lifecycleManager::handleBlitzComplete);

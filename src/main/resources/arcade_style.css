@@ -127,3 +127,25 @@
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 2, 0, 0, 1);
 }
 
+.overlay-score {
+    -fx-text-fill: #00d9ff;
+    -fx-font-family: "Segoe UI Semibold", sans-serif;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+.overlay-new-record {
+    -fx-text-fill: #ffea00;
+    -fx-font-family: "Impact", "Arial Black", sans-serif;
+    -fx-font-size: 32px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 3px;
+}
+
+.overlay-record {
+    -fx-text-fill: #e0d4ff;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-font-size: 20px;
+    -fx-font-weight: 600;
+}
+

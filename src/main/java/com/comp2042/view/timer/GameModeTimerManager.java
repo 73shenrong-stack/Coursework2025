@@ -162,6 +162,16 @@ public class GameModeTimerManager {
         }
     }
 
+    // Get current time in seconds
+
+    public int getCurrentTime() {
+        if (currentMode == GameMode.BLITZ) {
+            return timeRemaining;
+        } else {
+            return timeElapsed;
+        }
+    }
+
     // Stop the timer
 
     public void stopTimer() {
