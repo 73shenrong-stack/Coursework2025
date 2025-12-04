@@ -1,5 +1,7 @@
 package com.comp2042.view.ui;
 
+import com.comp2042.model.game.GameMode;
+import com.comp2042.model.game.GameRecords;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -17,6 +19,7 @@ class UIStateManagerTest {
     private VBox holdBrickContainer;
     private Label modeTimerLabel;
     private Label linesLabel;
+    private GameRecords gameRecords;
 
     @BeforeEach
     void setUp() {
@@ -26,6 +29,7 @@ class UIStateManagerTest {
         holdBrickContainer = new VBox();
         modeTimerLabel = new Label();
         linesLabel = new Label();
+        gameRecords = new GameRecords();
 
         uiStateManager = new UIStateManager(
                 gameOverOverlay, pauseOverlay, nextBrickContainer,
@@ -56,14 +60,14 @@ class UIStateManagerTest {
 
     @Test
     void testShowGameOverOverlay() {
-        uiStateManager.showGameOverOverlay();
+        uiStateManager.showGameOverOverlay(GameMode.ZEN, 1000, 10, gameRecords, false);
 
         assertTrue(gameOverOverlay.isVisible(), "Game over overlay should be visible");
     }
 
     @Test
     void testHideGameOverOverlay() {
-        uiStateManager.showGameOverOverlay();
+        uiStateManager.showGameOverOverlay(GameMode.ZEN, 1000, 10, gameRecords, false);
         uiStateManager.hideGameOverOverlay();
 
         assertFalse(gameOverOverlay.isVisible(), "Game over overlay should be hidden");
@@ -71,7 +75,7 @@ class UIStateManagerTest {
 
     @Test
     void testShowCompletionOverlay() {
-        uiStateManager.showCompletionOverlay();
+        uiStateManager.showCompletionOverlay(5000, 40, gameRecords, false);
 
         assertTrue(gameOverOverlay.isVisible(), "Completion overlay should be visible");
         assertFalse(gameOverOverlay.getChildren().isEmpty(),
@@ -132,9 +136,9 @@ class UIStateManagerTest {
 
     @Test
     void testMultipleShowHideCycles_GameOverOverlay() {
-        uiStateManager.showGameOverOverlay();
+        uiStateManager.showGameOverOverlay(GameMode.ZEN, 1000, 10, gameRecords, false);
         uiStateManager.hideGameOverOverlay();
-        uiStateManager.showGameOverOverlay();
+        uiStateManager.showGameOverOverlay(GameMode.BLITZ, 2000, 20, gameRecords, true);
 
         assertTrue(gameOverOverlay.isVisible());
     }
@@ -167,7 +171,7 @@ class UIStateManagerTest {
         UIStateManager manager = new UIStateManager(null, null, nextBrickContainer,
                 holdBrickContainer, modeTimerLabel, linesLabel);
 
-        assertDoesNotThrow(() -> manager.showGameOverOverlay());
+        assertDoesNotThrow(() -> manager.showGameOverOverlay(GameMode.ZEN, 1000, 10, gameRecords, false));
     }
 
     @Test
@@ -180,7 +184,7 @@ class UIStateManagerTest {
 
     @Test
     void testShowCompletionOverlay_HasCorrectContent() {
-        uiStateManager.showCompletionOverlay();
+        uiStateManager.showCompletionOverlay(5000, 40, gameRecords, false);
 
         assertTrue(gameOverOverlay.isVisible());
         assertTrue(gameOverOverlay.getChildren().size() > 0);
@@ -189,9 +193,40 @@ class UIStateManagerTest {
     @Test
     void testOverlayStateIndependence() {
         uiStateManager.showPauseOverlay();
-        uiStateManager.showGameOverOverlay();
+        uiStateManager.showGameOverOverlay(GameMode.FORTY_LINES, 3000, 30, gameRecords, false);
 
         assertTrue(pauseOverlay.isVisible(), "Both overlays can be visible");
+        assertTrue(gameOverOverlay.isVisible());
+    }
+
+    @Test
+    void testShowGameOverOverlay_WithNewRecord() {
+        uiStateManager.showGameOverOverlay(GameMode.BLITZ, 5000, 25, gameRecords, true);
+
+        assertTrue(gameOverOverlay.isVisible(), "Game over overlay should be visible with new record");
+    }
+
+    @Test
+    void testShowCompletionOverlay_WithNewRecord() {
+        uiStateManager.showCompletionOverlay(3000, 40, gameRecords, true);
+
+        assertTrue(gameOverOverlay.isVisible(), "Completion overlay should be visible with new record");
+    }
+
+    @Test
+    void testShowGameOverOverlay_DifferentGameModes() {
+        // Test with ZEN mode
+        uiStateManager.showGameOverOverlay(GameMode.ZEN, 1000, 10, gameRecords, false);
+        assertTrue(gameOverOverlay.isVisible());
+        uiStateManager.hideGameOverOverlay();
+
+        // Test with BLITZ mode
+        uiStateManager.showGameOverOverlay(GameMode.BLITZ, 2000, 20, gameRecords, false);
+        assertTrue(gameOverOverlay.isVisible());
+        uiStateManager.hideGameOverOverlay();
+
+        // Test with FORTY_LINES mode
+        uiStateManager.showGameOverOverlay(GameMode.FORTY_LINES, 3000, 40, gameRecords, false);
         assertTrue(gameOverOverlay.isVisible());
     }
 }

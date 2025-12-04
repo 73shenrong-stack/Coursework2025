@@ -5,6 +5,7 @@ import com.comp2042.model.data.MoveDownResult;
 import com.comp2042.model.data.MoveEvent;
 import com.comp2042.model.data.ViewData;
 import com.comp2042.model.game.GameMode;
+import com.comp2042.model.game.Score;
 import com.comp2042.view.timer.GameModeTimerManager;
 import com.comp2042.view.ui.UIStateManager;
 import javafx.animation.KeyFrame;
@@ -37,6 +38,7 @@ class GameLifecycleManagerTest {
     private BooleanProperty isPaused;
     private BooleanProperty isGameOver;
     private Pane sceneNode;
+    private Score score;
 
     @BeforeAll
     static void initJavaFX() throws InterruptedException {
@@ -71,10 +73,11 @@ class GameLifecycleManagerTest {
             isPaused = new SimpleBooleanProperty(false);
             isGameOver = new SimpleBooleanProperty(false);
             sceneNode = new Pane();
+            score = new Score();
 
             lifecycleManager = new GameLifecycleManager(
                     eventListener, gameLoopTimeline, timerManager, uiStateManager,
-                    isPaused, isGameOver, GameMode.BLITZ, sceneNode
+                    isPaused, isGameOver, GameMode.BLITZ, sceneNode, score
             );
             latch.countDown();
         });
