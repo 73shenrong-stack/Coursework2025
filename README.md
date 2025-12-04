@@ -45,7 +45,7 @@ If the build succeeds, you should see a file similar to:
 
 ### 4. Run the Application
 
-From the project root (or any directory where you can see the `target` folder):
+From the project root (or any directory where you can see the `target` folder:
 
     java -jar target/tetris-jfx-1.0-SNAPSHOT.jar
 
