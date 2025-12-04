@@ -16,7 +16,6 @@ import javafx.scene.Node;
 /**
  * Manages game lifecycle events (start, pause, resume, game over, new game)
  */
-
 public class GameLifecycleManager {
 
     private final InputEventListener eventListener;
@@ -102,13 +101,13 @@ public class GameLifecycleManager {
         stopAllTimelines();
         isGameOver.setValue(true);
         audioManager.stopBackground();
+        audioManager.playSound("gameover");
 
         int finalScore = score.scoreProperty().get();
         int finalTime = timerManager.getCurrentTime();
 
-        boolean isNewRecord = updateRecords(finalScore, finalTime);
-
-        uiStateManager.showGameOverOverlay(currentGameMode, finalScore, finalTime, records, isNewRecord);
+        // Show overlay WITHOUT saving records (game was not completed)
+        uiStateManager.showGameOverOverlay(currentGameMode, finalScore, finalTime, records, false);
         uiStateManager.hideGameUI();
     }
 
@@ -121,9 +120,13 @@ public class GameLifecycleManager {
         audioManager.playSound("gameover");
 
         int finalScore = score.scoreProperty().get();
-        int finalTime = timerManager.getCurrentTime();
+        int finalTime = 120; // Always 2 minutes for Blitz completion
 
-        boolean isNewRecord = updateRecords(finalScore, finalTime);
+        // Save record ONLY on completion (2 minutes reached)
+        boolean isNewRecord = records.updateBlitzRecord(finalScore, finalTime);
+        if (isNewRecord) {
+            RecordsPersistence.saveRecords(records);
+        }
 
         uiStateManager.showGameOverOverlay(currentGameMode, finalScore, finalTime, records, isNewRecord);
         uiStateManager.hideGameUI();
@@ -140,33 +143,14 @@ public class GameLifecycleManager {
         int finalScore = score.scoreProperty().get();
         int finalTime = timerManager.getCurrentTime();
 
-        boolean isNewRecord = updateRecords(finalScore, finalTime);
-
-        uiStateManager.showCompletionOverlay(finalScore, finalTime, records, isNewRecord);
-        uiStateManager.hideGameUI();
-    }
-
-    // Update records based on game mode
-    private boolean updateRecords(int finalScore, int finalTime) {
-        boolean isNewRecord = false;
-
-        switch (currentGameMode) {
-            case BLITZ:
-                isNewRecord = records.updateBlitzRecord(finalScore, finalTime);
-                break;
-            case FORTY_LINES:
-                isNewRecord = records.updateFortyLinesRecord(finalScore, finalTime);
-                break;
-            case ZEN:
-                isNewRecord = records.updateZenRecord(finalScore, finalTime);
-                break;
-        }
-
+        // Save record ONLY on completion (40 lines cleared)
+        boolean isNewRecord = records.updateFortyLinesRecord(finalScore, finalTime);
         if (isNewRecord) {
             RecordsPersistence.saveRecords(records);
         }
 
-        return isNewRecord;
+        uiStateManager.showCompletionOverlay(finalScore, finalTime, records, isNewRecord);
+        uiStateManager.hideGameUI();
     }
 
     // Return to main menu

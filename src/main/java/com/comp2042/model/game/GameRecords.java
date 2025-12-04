@@ -1,8 +1,6 @@
 package com.comp2042.model.game;
 
 import java.io.Serializable;
-import com.comp2042.view.lifecycle.GameLifecycleManager;
-
 
 // Manages game records (high scores and best times) for different game modes
 
@@ -15,8 +13,8 @@ public class GameRecords implements Serializable {
     private int zenHighScore = 0;
 
     // Best times (in seconds) for each mode
-    private int blitzBestTime = 0; // Time when high score was achieved
-    private int fortyLinesBestTime = 0; // Shortest completion time
+    private int blitzBestTime = 0; // Time when high score was achieved (always 120 for Blitz)
+    private int fortyLinesBestTime = Integer.MAX_VALUE; // Shortest completion time
     private int zenBestTime = 0; // Time when high score was achieved
 
     public GameRecords() {
@@ -29,7 +27,7 @@ public class GameRecords implements Serializable {
     public boolean updateBlitzRecord(int score, int timeInSeconds) {
         if (score > blitzHighScore) {
             blitzHighScore = score;
-            blitzBestTime = timeInSeconds;
+            blitzBestTime = 120; // Always 2 minutes for Blitz
             return true;
         }
         return false;
@@ -41,12 +39,23 @@ public class GameRecords implements Serializable {
     public boolean updateFortyLinesRecord(int score, int timeInSeconds) {
         boolean isNewRecord = false;
 
-        // Check if Score is higher (even if time is worse)
-        if (score > fortyLinesHighScore) {
-            fortyLinesHighScore = score;
+        // New record if: faster time OR same time but higher score
+        if (timeInSeconds < fortyLinesBestTime) {
+            // Faster time is always a new record
             fortyLinesBestTime = timeInSeconds;
+            fortyLinesHighScore = score;
+            isNewRecord = true;
+        } else if (timeInSeconds == fortyLinesBestTime && score > fortyLinesHighScore) {
+            // Same time but higher score
+            fortyLinesHighScore = score;
+            isNewRecord = true;
+        } else if (fortyLinesBestTime == Integer.MAX_VALUE) {
+            // First completion ever
+            fortyLinesBestTime = timeInSeconds;
+            fortyLinesHighScore = score;
             isNewRecord = true;
         }
+
         return isNewRecord;
     }
 
