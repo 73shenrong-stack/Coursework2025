@@ -7,7 +7,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /** Responsible for rendering preview panels (Next piece and Hold piece)
- *
+ *  Manages two independent 4×4 grids that display upcoming and held tetrominoes.
+ *  Each preview automatically centers the piece within the panel regardless of its rotation or shape.
  */
 public class PreviewPanelRenderer {
 
@@ -15,12 +16,20 @@ public class PreviewPanelRenderer {
     private Rectangle[][] holdBrickRectangles;
     private final ColorTheme colorTheme;
 
+    /**
+     * Creates a new preview renderer with the specified color theme.
+     *
+     * @param colorTheme the theme defining tetromino colors
+     */
     public PreviewPanelRenderer(ColorTheme colorTheme) {
         this.colorTheme = colorTheme;
     }
 
-    // Initialize the next brick preview panel
-
+    /**
+     * Initializes the "Next" piece preview panel.
+     *
+     * @param nextBrickPanel the GridPane used for the next piece preview
+     */
     public void initializeNextBrickPanel(GridPane nextBrickPanel) {
         nextBrickRectangles = new Rectangle[GameConstants.PREVIEW_PANEL_SIZE][GameConstants.PREVIEW_PANEL_SIZE];
         for (int i = 0; i < GameConstants.PREVIEW_PANEL_SIZE; i++) {
@@ -35,8 +44,10 @@ public class PreviewPanelRenderer {
         }
     }
 
-    // Initialize the hold brick preview panel
-
+    /**
+     * Initializes the "Hold" piece preview panel.
+     * @param holdBrickPanel the GridPane used for the hold piece preview
+     */
     public void initializeHoldBrickPanel(GridPane holdBrickPanel) {
         holdBrickRectangles = new Rectangle[GameConstants.PREVIEW_PANEL_SIZE][GameConstants.PREVIEW_PANEL_SIZE];
         for (int i = 0; i < GameConstants.PREVIEW_PANEL_SIZE; i++) {
@@ -51,8 +62,11 @@ public class PreviewPanelRenderer {
         }
     }
 
-    // Update the next brick preview display
-
+    /**
+     * Updates the "Next" piece preview with the given tetromino data.
+     *
+     * @param nextBrickData 2D array representing the next tetromino
+     */
     public void updateNextBrickDisplay(int[][] nextBrickData) {
         // Clear all rectangles
         for (int i = 0; i < GameConstants.PREVIEW_PANEL_SIZE; i++) {
@@ -66,8 +80,11 @@ public class PreviewPanelRenderer {
         renderCenteredBrick(nextBrickData, nextBrickRectangles);
     }
 
-    // Update the hold brick preview display
-
+    /**
+     * Updates the "Hold" piece preview with the given tetromino data.
+     *
+     * @param holdBrickData 2D array representing the held tetromino
+     */
     public void updateHoldBrickDisplay(int[][] holdBrickData) {
         // Clear all rectangles
         for (int i = 0; i < GameConstants.PREVIEW_PANEL_SIZE; i++) {
@@ -81,8 +98,12 @@ public class PreviewPanelRenderer {
         renderCenteredBrick(holdBrickData, holdBrickRectangles);
     }
 
-    // Render a brick centered in a 4x4 preview grid
-
+    /**
+     * Renders a tetromino centered within a 4×4 preview grid.
+     *
+     * @param brickData        the 2D array representing the tetromino shape and color
+     * @param targetRectangles the 4×4 rectangle grid to render into
+     */
     private void renderCenteredBrick(int[][] brickData, Rectangle[][] targetRectangles) {
         // Find the bounding box of the brick
         int minRow = GameConstants.PREVIEW_PANEL_SIZE, maxRow = -1;

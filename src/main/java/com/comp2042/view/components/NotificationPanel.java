@@ -14,8 +14,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
+/**
+ * A temporary visual notification panel used to display score bonuses earned from clearing lines.
+ */
 public class NotificationPanel extends BorderPane {
 
+    /**
+     * Constructs a new notification panel displaying the specified text.
+     *
+     * @param text the score bonus text to display (e.g. "+100", "+800", "Tetris!")
+     */
     public NotificationPanel(String text) {
         setMinHeight(200);
         setMinWidth(220);
@@ -28,6 +36,12 @@ public class NotificationPanel extends BorderPane {
 
     }
 
+    /**
+     * Plays the appearance animation: the panel floats upward while fading out,
+     * then removes itself from the specified observable list of nodes.
+     *
+     * @param list the ObservableList containing this notification
+     */
     public void showScore(ObservableList<Node> list) {
         FadeTransition ft = new FadeTransition(Duration.millis(2000), this);
         TranslateTransition tt = new TranslateTransition(Duration.millis(2500), this);

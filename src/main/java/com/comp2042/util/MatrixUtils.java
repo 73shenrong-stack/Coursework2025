@@ -19,8 +19,15 @@ public class MatrixUtils {
         throw new AssertionError("Cannot instantiate utility class");
     }
 
-    // Check if a brick collides with the board or goes out of bounds
-
+    /**
+     * Checks if a brick collides with the board or goes out of bounds.
+     *
+     * @param matrix the game board matrix representing filled positions
+     * @param brick  the 2D array representing the brick shape
+     * @param x      the x-coordinate (column) for the brick's top-left corner
+     * @param y      the y-coordinate (row) for the brick's top-left corner
+     * @return       true if there is a collision or the brick is out of bounds; false otherwise
+     */
     public static boolean hasCollision(final int[][] matrix, final int[][] brick, int x, int y) {
         for (int i = 0; i < brick.length; i++) {
             for (int j = 0; j < brick[i].length; j++) {
@@ -34,13 +41,25 @@ public class MatrixUtils {
         return false;
     }
 
-    // Check if coordinates are out of bounds
+/**
+ * Checks if the specified coordinates are outside the matrix boundaries.
+ *
+ * @param matrix  the game board matrix to check against
+ * @param targetX the x-coordinate (column) to check
+ * @param targetY the y-coordinate (row) to check
+ * @return true if the coordinates are out of bounds; false otherwise
+ */
 
     private static boolean isOutOfBounds(int[][] matrix, int targetX, int targetY) {
         return targetX < 0 || targetY >= matrix.length || targetY < 0 || targetX >= matrix[0].length;
     }
 
-    // Create a deep copy of a 2D array
+    /**
+     * Creates a deep copy of a 2D integer array.
+     *
+     * @param original the 2D array to copy
+     * @return a new 2D array containing the same values as the original
+     */
     public static int[][] copy(int[][] original) {
         int[][] copy = new int[original.length][];
         for (int i = 0; i < original.length; i++) {
@@ -52,7 +71,15 @@ public class MatrixUtils {
         return copy;
     }
 
-    // Merge a brick into the board matrix
+    /**
+     * Merges a brick into the board matrix at the specified position.
+     *
+     * @param filledFields the current game board matrix
+     * @param brick        the 2D array representing the brick shape
+     * @param x            the x-coordinate (column) for the brick's top-left corner
+     * @param y            the y-coordinate (row) for the brick's top-left corner
+     * @return a new matrix with the brick merged into the board
+     */
 
     public static int[][] merge(int[][] filledFields, int[][] brick, int x, int y) {
         int[][] result = copy(filledFields);
@@ -68,7 +95,14 @@ public class MatrixUtils {
         return result;
     }
 
-    // Check for and clear completed lines
+    /**
+     * Checks for and clears completed lines from the matrix.
+     *
+     * @param matrix the current game board matrix to check for completed lines
+     * @return a LineClearResult containing the number of lines cleared, the updated matrix, and the score bonus earned
+     * @see LineClearResult
+     * @see GameConstants#LINE_CLEAR_BASE_SCORE
+     */
 
     public static LineClearResult clearCompletedLines(final int[][] matrix) {
         int[][] temp = new int[matrix.length][matrix[0].length];
@@ -110,8 +144,12 @@ public class MatrixUtils {
         return new LineClearResult(clearedRows.size(), temp, scoreBonus);
     }
 
-    // Create a deep copy of a list of 2D arrays
-
+    /**
+     * Creates a deep copy of a list containing 2D integer arrays.
+     *
+     * @param list the list of 2D arrays to copy
+     * @return a new list containing deep copies of all 2D arrays from the original list
+     */
     public static List<int[][]> deepCopyList(List<int[][]> list) {
         return list.stream().map(MatrixUtils::copy).collect(Collectors.toList());
     }

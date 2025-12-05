@@ -5,6 +5,9 @@ import javafx.scene.paint.Color;
 
 /**
  * Manages color themes for different game modes
+ * Provides two distinct visual themes:
+ * Arcade - vibrant, high-contrast neon colors
+ * Zen - soft, calming pastel colors
  */
 public class ColorTheme {
 
@@ -35,25 +38,41 @@ public class ColorTheme {
             Color.web("#E5C3A6")
     };
 
+    /**
+     * Private constructor - instances should be created via factory methods.
+     *
+     * @param colors array of colors for indices 0–7
+     * @param name   name of the theme
+     */
     private ColorTheme(Color[] colors, String name) {
         this.colors = colors;
         this.name = name;
     }
 
-    // Get arcade theme (bright, neon colors)
-
+    /**
+     * Returns the Arcade (neon) color theme.
+     *
+     * @return a ColorTheme instance with bright, vibrant colors
+     */
     public static ColorTheme arcade() {
         return new ColorTheme(ARCADE_COLORS, "Arcade");
     }
 
-    // Get zen theme (soft, pastel colors)
-
+    /**
+     * Returns the Zen (pastel) color theme.
+     *
+     * @return a ColorTheme instance with soft, calming colors
+     */
     public static ColorTheme zen() {
         return new ColorTheme(ZEN_COLORS, "Zen");
     }
 
-    // Get color theme based on game mode
-
+/**
+ * Returns the appropriate color theme based on the current GameMode.
+ *
+ * @param mode the current game mode
+ * @return the matching ColorTheme
+ */
     public static ColorTheme forMode(GameMode mode) {
         if (mode == GameMode.ZEN) {
             return zen();
@@ -62,8 +81,12 @@ public class ColorTheme {
         }
     }
 
-    // Get color for a specific brick type
-
+    /**
+     * Returns the Color associated with the given tetromino type index.
+     *
+     * @param colorIndex numeric identifier of the brick (0–7)
+     * @return the corresponding Color
+     */
     public Color getColor(int colorIndex) {
         if (colorIndex < 0 || colorIndex >= colors.length) {
             return Color.WHITE; // Fallback color
@@ -71,20 +94,30 @@ public class ColorTheme {
         return colors[colorIndex];
     }
 
-    // Check if a color index represents an empty cell
-
+    /**
+     * Checks whether the given color index represents an empty cell.
+     *
+     * @param colorIndex the index to check
+     * @return true if the index is 0 (empty), false otherwise
+     */
     public boolean isEmpty(int colorIndex) {
         return colorIndex == 0;
     }
 
-    // Get the theme name
-
+    /**
+     * Returns the human-readable name of this theme.
+     *
+     * @return "Arcade" or "Zen"
+     */
     public String getName() {
         return name;
     }
 
-    // Get CSS file path for this theme
-
+    /**
+     * Returns the CSS stylesheet filename associated with this theme.
+     *
+     * @return {@code "arcade_style.css"} or {@code "zen_style.css"}
+     */
     public String getCssFile() {
         if (name.equals("Zen")) {
             return "zen_style.css";

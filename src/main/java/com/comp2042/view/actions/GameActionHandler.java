@@ -17,7 +17,10 @@ import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
 
 /**
- * Handles game actions like move down, hold piece, and hard drop
+ * Handles game actions including piece movement, rotation, hold, and hard drop.
+ * @see InputEventListener
+ * @see GameRenderer
+ * @see PreviewPanelRenderer
  */
 public class GameActionHandler {
 
@@ -29,6 +32,16 @@ public class GameActionHandler {
     private final ObservableList<Node> notificationContainer;
     private final AudioManager audioManager;
 
+    /**
+     * Constructs a new GameActionHandler with the specified dependencies.
+     *
+     * @param eventListener         the input event listener for processing game events
+     * @param gameRenderer          the renderer for the main game display
+     * @param previewRenderer       the renderer for the preview panel (next/hold pieces)
+     * @param timerManager          the timer manager for game mode timing
+     * @param gamePanel             the GridPane representing the game board
+     * @param notificationContainer the observable list for adding notification nodes
+     */
     public GameActionHandler(InputEventListener eventListener, GameRenderer gameRenderer, PreviewPanelRenderer previewRenderer, GameModeTimerManager timerManager, GridPane gamePanel, ObservableList<Node> notificationContainer) {
         this.eventListener = eventListener;
         this.gameRenderer = gameRenderer;
@@ -39,7 +52,14 @@ public class GameActionHandler {
         this.audioManager = AudioManager.getInstance();
     }
 
-    // Handle piece moving down
+    /**
+     * Handles the piece moving down action (soft drop).
+     *
+     * @param event the move event containing the event type and source
+     * @return the result of the move down operation, including view data and line clear information
+     * @see MoveDownResult
+     * @see MoveEvent
+     */
 
     public MoveDownResult handleMoveDown(MoveEvent event) {
         MoveDownResult result = eventListener.onDownEvent(event);

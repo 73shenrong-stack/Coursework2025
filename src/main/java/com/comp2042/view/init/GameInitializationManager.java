@@ -15,7 +15,7 @@ import javafx.util.Duration;
 import java.net.URL;
 
 /**
- * Handles initialization of game components
+ * Manages initialization and configuration of core game view components.
  */
 
 public class GameInitializationManager {
@@ -24,14 +24,29 @@ public class GameInitializationManager {
     private final GridPane gamePanel;
     private final GridPane brickPanel;
 
+    /**
+     * Constructs a new {@code GameInitializationManager} with the required UI containers.
+     *
+     * @param rootPane   the root StackPane containing the game UI
+     * @param gamePanel  the GridPane used for the main game board
+     * @param brickPanel the GridPane used for rendering the active brick
+     */
     public GameInitializationManager(StackPane rootPane, GridPane gamePanel, GridPane brickPanel) {
         this.rootPane = rootPane;
         this.gamePanel = gamePanel;
         this.brickPanel = brickPanel;
     }
 
-    // Initialize renderers for the game
-
+    /**
+     * Initializes and configures the game and preview renderers.
+     *
+     * @param boardMatrix    the current game board matrix
+     * @param brick          the ViewData containing current, next, and held brick data
+     * @param nextBrickPanel the GridPane for the next piece preview
+     * @param holdBrickPanel the GridPane for the hold piece preview
+     * @param colorTheme     the ColorTheme used to style the renderers
+     * @return a RendererBundle containing the initialized game and preview renderers
+     */
     public RendererBundle initializeRenderers(int[][] boardMatrix, ViewData brick,
                                               GridPane nextBrickPanel, GridPane holdBrickPanel,
                                               ColorTheme colorTheme) {
@@ -53,8 +68,11 @@ public class GameInitializationManager {
         return new RendererBundle(gameRenderer, previewRenderer);
     }
 
-    //Apply CSS theme to the root pane
 
+    /**
+     * Applies the specified ColorTheme to the root pane.
+     * @param colorTheme the theme whose CSS file should be applied
+     */
     public void applyTheme(ColorTheme colorTheme) {
         if (rootPane != null) {
             rootPane.getStylesheets().clear();
@@ -69,8 +87,11 @@ public class GameInitializationManager {
         }
     }
 
-    // Position the brick panel based on current brick position
-
+    /**
+     * Positions the active brick panel within the game panel based on the current brick position.
+     *
+     * @param brick the ViewData describing the current brick's position
+     */
     public void positionBrickPanel(ViewData brick) {
         double xPos = gamePanel.getLayoutX() +
                 brick.getXPosition() * (brickPanel.getVgap() + GameConstants.BRICK_SIZE);
@@ -81,7 +102,13 @@ public class GameInitializationManager {
         brickPanel.setLayoutY(yPos);
     }
 
-    // Create the game loop timeline
+    /**
+     * Creates the main game loop {@link Timeline} for the specified GameMode.
+     *
+     * @param mode   the current game mode, which determines the drop speed
+     * @param onTick the callback to execute on each game loop tick
+     * @return a configured Timeline set to run indefinitely
+     */
     public Timeline createGameLoop(GameMode mode, Runnable onTick) {
         Duration speed = getSpeedForMode(mode);
         Timeline timeline = new Timeline(new KeyFrame(speed, event -> onTick.run()));
@@ -89,8 +116,12 @@ public class GameInitializationManager {
         return timeline;
     }
 
-    // Get the drop speed for the specified game mode
-
+    /**
+     * Returns the drop speed Duration corresponding to the given GameMode.
+     *
+     * @param mode the game mode whose speed should be returned
+     * @return a Duration representing the drop speed for the given mode
+     */
     private Duration getSpeedForMode(GameMode mode) {
         switch (mode) {
             case BLITZ:
@@ -109,15 +140,31 @@ public class GameInitializationManager {
         private final GameRenderer gameRenderer;
         private final PreviewPanelRenderer previewRenderer;
 
+        /**
+         * Constructs a new {@code RendererBundle}.
+         *
+         * @param gameRenderer    the initialized GameRenderer
+         * @param previewRenderer the initialized PreviewPanelRenderer
+         */
         public RendererBundle(GameRenderer gameRenderer, PreviewPanelRenderer previewRenderer) {
             this.gameRenderer = gameRenderer;
             this.previewRenderer = previewRenderer;
         }
 
+        /**
+         * Returns the GameRenderer contained in this bundle.
+         *
+         * @return the game renderer
+         */
         public GameRenderer getGameRenderer() {
             return gameRenderer;
         }
 
+        /**
+         * Returns the PreviewPanelRenderer contained in this bundle.
+         *
+         * @return the preview panel renderer
+         */
         public PreviewPanelRenderer getPreviewRenderer() {
             return previewRenderer;
         }

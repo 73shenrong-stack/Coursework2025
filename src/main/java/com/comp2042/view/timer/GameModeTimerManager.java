@@ -6,8 +6,8 @@ import javafx.animation.Timeline;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
-/** Manages game mode-specific timers (Blitz countdown, 40 Lines/Zen count-up)
- *
+/** Manages game mode-specific timers and line counters for Blitz, 40 Lines, and Zen modes.
+ *  Supports pause/resume, completion callbacks, and proper cleanup.
  */
 
 public class GameModeTimerManager {
@@ -27,13 +27,22 @@ public class GameModeTimerManager {
     private Runnable onBlitzComplete;
     private Runnable onFortyLinesComplete;
 
+    /**
+     * Creates a new timer manager bound to the specified UI labels.
+     *
+     * @param timerLabel the label showing time (MM:SS)
+     * @param linesLabel the label showing lines cleared or progress
+     */
     public GameModeTimerManager(Label timerLabel, Label linesLabel) {
         this.timerLabel = timerLabel;
         this.linesLabel = linesLabel;
     }
 
-    // Start timer for the specified game mode
-
+    /**
+     * Starts (or restarts) the timer for the specified game mode.
+     *
+     * @param mode the GameMode to start timing
+     */
     public void startTimer(GameMode mode) {
         this.currentMode = mode;
         stopTimer(); // Stop any existing timer
@@ -109,8 +118,11 @@ public class GameModeTimerManager {
         gameTimer.play();
     }
 
-    // Add cleared lines and check for completion
-
+    /**
+     * Adds cleared lines to the counter and checks for 40 Lines completion.
+     *
+     * @param lines number of lines cleared in the most recent clear event
+     */
     public void addLinesCleared(int lines) {
         linesCleared += lines;
         updateDisplays();
@@ -162,8 +174,11 @@ public class GameModeTimerManager {
         }
     }
 
-    // Get current time in seconds
-
+    /**
+     * Returns the current time in seconds.
+     *
+     * @return current time value in seconds
+     */
     public int getCurrentTime() {
         if (currentMode == GameMode.BLITZ) {
             return timeRemaining;
@@ -196,11 +211,20 @@ public class GameModeTimerManager {
         }
     }
 
-    // Setters for completion callbacks
+    /**
+     * Sets the callback to execute when Blitz mode time reaches zero.
+     *
+     * @param callback the Runnable to execute on completion
+     */
     public void setOnBlitzComplete(Runnable callback) {
         this.onBlitzComplete = callback;
     }
 
+    /**
+     * Sets the callback to execute when 40 lines are cleared in 40 Lines mode.
+     *
+     * @param callback the Runnable to execute on completion
+     */
     public void setOnFortyLinesComplete(Runnable callback) {
         this.onFortyLinesComplete = callback;
     }

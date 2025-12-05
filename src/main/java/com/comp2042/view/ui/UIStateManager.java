@@ -11,7 +11,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 /** Manages UI element visibility and overlay states
- *
+ *  All overlay content is dynamically generated with proper styling, high score comparison, new record indication and player instructions.
  */
 
 public class UIStateManager {
@@ -23,6 +23,16 @@ public class UIStateManager {
     private final Label modeTimerLabel;
     private final Label linesLabel;
 
+    /**
+     * Constructs a new UI state manager with references to all managed UI components.
+     *
+     * @param gameOverOverlay   overlay pane shown on game over or mode completion
+     * @param pauseOverlay      overlay pane shown when game is paused
+     * @param nextBrickContainer container for the "Next" piece preview
+     * @param holdBrickContainer container for the "Hold" piece preview
+     * @param modeTimerLabel    label displaying mode-specific timer
+     * @param linesLabel        label displaying lines cleared or progress
+     */
     public UIStateManager(Pane gameOverOverlay, Pane pauseOverlay, VBox nextBrickContainer, VBox holdBrickContainer, Label modeTimerLabel, Label linesLabel) {
         this.gameOverOverlay = gameOverOverlay;
         this.pauseOverlay = pauseOverlay;
@@ -61,8 +71,15 @@ public class UIStateManager {
         }
     }
 
-    // Show the game over overlay
-
+    /**
+     * Displays the standard Game Over overlay (used when player loses).
+     *
+     * @param mode        the game mode that just ended
+     * @param finalScore  player's final score
+     * @param finalTime   final time in seconds
+     * @param records     current high score records
+     * @param isNewRecord true if a new high score was achieved
+     */
     public void showGameOverOverlay(GameMode mode, int finalScore, int finalTime, GameRecords records, boolean isNewRecord) {
         if (gameOverOverlay != null) {
             gameOverOverlay.setVisible(true);
@@ -124,8 +141,14 @@ public class UIStateManager {
         }
     }
 
-    // Show 40 lines completion overlay
-
+    /**
+     * Displays the special victory overlay when 40 Lines mode is successfully completed.
+     *
+     * @param finalScore  final score achieved
+     * @param finalTime   time taken to clear 40 lines (in seconds)
+     * @param records     current high score records
+     * @param isNewRecord true if this is the new fastest time or highest score
+     */
     public void showCompletionOverlay(int finalScore, int finalTime, GameRecords records, boolean isNewRecord) {
         if (gameOverOverlay != null) {
             gameOverOverlay.setVisible(true);
@@ -171,8 +194,11 @@ public class UIStateManager {
         }
     }
 
-    // Set visibility of game UI elements (next piece, hold piece, timer, lines)
-
+    /**
+     * Sets visibility of all core game UI elements.
+     *
+     * @param visible true to show, {@code false} to hide
+     */
     public void setGameUIVisibility(boolean visible) {
         if (nextBrickContainer != null) {
             nextBrickContainer.setVisible(visible);

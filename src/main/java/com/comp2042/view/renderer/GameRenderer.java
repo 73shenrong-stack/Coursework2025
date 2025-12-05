@@ -8,7 +8,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 /** Responsible for rendering the Tetris game board and pieces
- *
+ * All rendering is performed by manipulating pre-created Rectangle instances
+ * Added to GridPanes, which provides excellent performance even during fast drops.
+ * Visual styling (colors, rounded corners) is controlled via a ColorTheme.
  */
 
 public class GameRenderer {
@@ -18,12 +20,20 @@ public class GameRenderer {
     private Rectangle[][] shadowRectangles;
     private final ColorTheme colorTheme;
 
+    /**
+     * Creates a new renderer with the specified color theme.
+     *
+     * @param colorTheme the theme defining colors for each tetromino type
+     */
     public GameRenderer(ColorTheme colorTheme) {
         this.colorTheme = colorTheme;
     }
 
-    // Initialize the background matrix display
-
+    /**
+     * Initializes the background display matrix that shows locked pieces.
+     * @param boardMatrix the current board state (2D array)
+     * @param gamePanel   the GridPane representing the visible playfield
+     */
     public void initializeDisplayMatrix(int[][] boardMatrix, GridPane gamePanel) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = GameConstants.VISIBLE_ROW_START; i < boardMatrix.length; i++) {
@@ -36,8 +46,11 @@ public class GameRenderer {
         }
     }
 
-    // Initialize the falling brick rectangles
-
+    /**
+     * Initializes the rectangle grid used to render the currently falling piece.
+     * @param brickData  the 2D array representing the current tetromino shape
+     * @param brickPanel the GridPane that holds the falling piece
+     */
     public void initializeBrickRectangles(int[][] brickData, GridPane brickPanel) {
         brickRectangles = new Rectangle[brickData.length][brickData[0].length];
         for (int i = 0; i < brickData.length; i++) {
@@ -50,7 +63,12 @@ public class GameRenderer {
         }
     }
 
-    // Initialize shadow/ghost piece rectangles
+    /**
+     * Initializes the ghost/shadow piece rectangles.
+     *
+     * @param brickData the current tetromino shape
+     * @param gamePanel the main game GridPane
+     */
 
     public void initializeShadowRectangles(int[][] brickData, GridPane gamePanel) {
         shadowRectangles = new Rectangle[brickData.length][brickData[0].length];
@@ -65,8 +83,12 @@ public class GameRenderer {
         }
     }
 
-    // Refresh the falling brick display
-
+    /**
+     * Refreshes the visual representation of the currently falling piece and updates the ghost piece.
+     *
+     * @param viewData  the current game state containing brick data and position
+     * @param gamePanel the main game GridPane used for drawing active pieces
+     */
     public void refreshBrick(ViewData viewData, GridPane gamePanel) {
         // Clear old falling piece
         for (Rectangle[] row : brickRectangles) {
@@ -100,7 +122,12 @@ public class GameRenderer {
         updateShadow(viewData, gamePanel);
     }
 
-    // Update the shadow/ghost piece position
+    /**
+     * Updates the ghost/shadow piece to show where the current piece will land.
+     *
+     * @param viewData  current game state with shadow Y position
+     * @param gamePanel the main game GridPane
+     */
 
     public void updateShadow(ViewData viewData, GridPane gamePanel) {
         // Clear old shadow
@@ -132,7 +159,11 @@ public class GameRenderer {
         }
     }
 
-    // Refresh the game background (locked pieces)
+    /**
+     * Refreshes the background board display (all locked pieces).
+     *
+     * @param board the current board matrix containing color values of locked cells
+     */
 
     public void refreshGameBackground(int[][] board) {
         for (int i = GameConstants.VISIBLE_ROW_START; i < board.length; i++) {
@@ -142,7 +173,12 @@ public class GameRenderer {
         }
     }
 
-    // Set the color and style for a rectangle
+    /**
+     * Applies color and rounded corner styling to a rectangle based on the cell value.
+     *
+     * @param colorValue numeric identifier of the tetromino type (0 = empty)
+     * @param rectangle  the Rectangle to style
+     */
 
     private void setRectangleData(int colorValue, Rectangle rectangle) {
         rectangle.setFill(colorTheme.getColor(colorValue));

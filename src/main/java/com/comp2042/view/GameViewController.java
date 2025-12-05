@@ -31,8 +31,9 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
-*Main view controller for the Tetris game.
-*Delegates responsibilities to specialized managers and handlers.
+ * Main view controller for the Tetris game.
+ * Delegates responsibilities to specialized managers and handlers.
+ *  This is the central orchestrator of the entire game UI. It follows a clean, delegation-heavy architecture by coordinating multiple specialized managers and handlers instead of containing game logic directly.
  */
 public class GameViewController implements Initializable {
 
@@ -116,7 +117,13 @@ public class GameViewController implements Initializable {
             public void onExit() {lifecycleManager.returnToMainMenu();}
         });
     }
-    //Initialize the game view with board and game mode
+    /**
+     * Fully initializes the game view with board state, current piece, and selected mode.
+     *
+     * @param boardMatrix initial board matrix (locked pieces)
+     * @param brick       initial ViewData containing current, next, and held pieces
+     * @param mode        the selected GameMode
+     */
     public void initGameView(int[][] boardMatrix, ViewData brick, GameMode mode) {
         this.currentGameMode = mode;
         // Setup theme
@@ -187,7 +194,10 @@ public class GameViewController implements Initializable {
         lifecycleManager.pauseGame();
         gamePanel.requestFocus();
     }
-    //Set the event listener
-    public void setEventListener(InputEventListener listener) {this.eventListener = listener;
+    /**
+     * Injects the game controller that implements {@link InputEventListener}.
+     *
+     * @param listener the active game controller instance
+     */    public void setEventListener(InputEventListener listener) {this.eventListener = listener;
     }
 }

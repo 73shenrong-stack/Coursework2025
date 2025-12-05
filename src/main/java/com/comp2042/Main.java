@@ -10,9 +10,18 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-
+/**
+ * Starts the JavaFX application by initializing the primary stage
+ * The application starts in the main menu scene, from which players can select game modes (Normal, 40 Lines, Blitz, Zen), view high scores, adjust settings or exit the game.
+ */
 public class Main extends Application {
 
+    /**
+     * Starts the JavaFX application by initializing the primary stage and loading the main menu scene.
+     *
+     * @param primaryStage the primary stage for this application onto which the application scene is set
+     * @throws Exception if the FXML file or CSS resource cannot be loaded
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
 
@@ -42,6 +51,12 @@ public class Main extends Application {
 
         primaryStage.show();
     }
+
+    /**
+     * Main method – launches the JavaFX application.
+     *
+     * @param args command-line arguments
+     */
     public static void main(String[] args) {
         launch(args);
     }

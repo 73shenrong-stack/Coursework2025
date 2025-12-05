@@ -14,7 +14,7 @@ import javafx.beans.property.BooleanProperty;
 import javafx.scene.Node;
 
 /**
- * Manages game lifecycle events (start, pause, resume, game over, new game)
+ * Central manager responsible for controlling the entire game lifecycle.
  */
 public class GameLifecycleManager {
 
@@ -30,6 +30,19 @@ public class GameLifecycleManager {
     private final Score score;
     private final GameRecords records;
 
+    /**
+     * Constructs a new {@code GameLifecycleManager} with all required dependencies.
+     *
+     * @param eventListener     the controller that handles game input events
+     * @param gameLoopTimeline  the main game loop Timeline
+     * @param timerManager      manages mode-specific timers (Blitz, 40 Lines)
+     * @param uiStateManager    controls visibility of overlays and UI elements
+     * @param isPaused          property indicating whether the game is currently paused
+     * @param isGameOver        property indicating whether the game has ended
+     * @param currentGameMode   the active GameMode
+     * @param sceneNode         the root node of the current scene (used for navigation)
+     * @param score             the current game Score object
+     */
     public GameLifecycleManager(InputEventListener eventListener, Timeline gameLoopTimeline, GameModeTimerManager timerManager, UIStateManager uiStateManager, BooleanProperty isPaused, BooleanProperty isGameOver, GameMode currentGameMode, Node sceneNode, Score score) {
         this.eventListener = eventListener;
         this.gameLoopTimeline = gameLoopTimeline;
@@ -44,8 +57,10 @@ public class GameLifecycleManager {
         this.records = RecordsPersistence.loadRecords();
     }
 
-    // Start a new game
-
+    /**
+     * Starts a completely new game from scratch.
+     * Resets pause/game-over states, hides all overlays, initializes a fresh game
+     */
     public void startNewGame() {
         stopAllTimelines();
 
@@ -84,8 +99,9 @@ public class GameLifecycleManager {
         }
     }
 
-    // Resume the game
-
+    /** Resume the game
+    * Restores the game loop, timer, background music, and hides the pause overlay.
+     */
     public void resumeGame() {
         isPaused.setValue(false);
         gameLoopTimeline.play();
@@ -96,7 +112,7 @@ public class GameLifecycleManager {
     }
 
     // Handle game over
-
+    // Stop all the timers
     public void handleGameOver() {
         stopAllTimelines();
         isGameOver.setValue(true);
@@ -132,7 +148,10 @@ public class GameLifecycleManager {
         uiStateManager.hideGameUI();
     }
 
-    // Handle 40 Lines mode completion
+    /**
+     * Handles successful completion of 40 Lines mode.
+     * Plays victory sound, saves the result if it's a new record and displays the special completion overlay with time and score.
+     */
 
     public void handleFortyLinesComplete() {
         stopAllTimelines();
@@ -172,7 +191,11 @@ public class GameLifecycleManager {
         }
     }
 
-    // Get current records
+    /**
+     * Returns the current loaded high score records.
+     *
+     * @return the GameRecords object containing all persisted best scores
+     */
     public GameRecords getRecords() {
         return records;
     }

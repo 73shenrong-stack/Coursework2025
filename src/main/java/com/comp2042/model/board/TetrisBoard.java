@@ -168,33 +168,6 @@ public class TetrisBoard implements Board {
     /**
      * Spawns a new piece at the top-center of the board.
      *
-     * <p>This method is called:
-     * <ul>
-     *   <li>At game start</li>
-     *   <li>After each piece locks</li>
-     *   <li>When using hold function with empty hold slot</li>
-     * </ul>
-     *
-     * <p><b>Spawn Process:</b>
-     * <ol>
-     *   <li>Get next piece from generator (using bag system)</li>
-     *   <li>Set piece in rotator at rotation state 0</li>
-     *   <li>Position piece at spawn coordinates (typically column 3, row 0)</li>
-     *   <li>Reset hold flag to allow holding the new piece</li>
-     *   <li>Check for spawn collision (game over condition)</li>
-     * </ol>
-     *
-     * <p><b>Game Over Detection:</b>
-     * If the new piece collides with existing blocks at the spawn position,
-     * this indicates the board has filled up and the game is over. The return
-     * value signals this condition to the game controller.
-     *
-     * <p><b>Spawn Position (Standard):</b>
-     * <ul>
-     *   <li><b>X:</b> 3 (center-left of 10-column board)</li>
-     *   <li><b>Y:</b> 0 (top of hidden area, 2 rows above visible area)</li>
-     * </ul>
-     *
      * @return true if the new piece collides at spawn (game over), false if spawn successful
      */
     @Override
@@ -263,18 +236,6 @@ public class TetrisBoard implements Board {
      * Where BASE_SCORE = 50 points per line
      * The quadratic formula (n²) encourages skillful play:
      * Score = BASE_SCORE × lines²
-     *
-     * LineClearResult result = board.clearRows();
-     * if (result.getLinesRemoved() > 0) {
-     *     // Update game state
-     *     board.getScore().add(result.getScoreBonus());
-     *
-     *     // Play sound effect
-     *     audioManager.playSound("clear");
-     *
-     *     // Show points notification
-     *     showNotification("+" + result.getScoreBonus());
-     * }
      *
      * @return a LineClearResult containing lines cleared, new board state, and score bonus
      * @see LineClearResult
