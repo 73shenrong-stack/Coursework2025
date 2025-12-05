@@ -9,13 +9,21 @@ import javafx.scene.input.KeyEvent;
 import java.util.HashSet;
 import java.util.Set;
 
-// Handles keyboard input for the game
+/**
+ * Handles keyboard input for the Tetris game.
+ * Manages key press and release events, tracks currently pressed keys and delegates actions to a callback interface.
+ * Distinguishes between game controls (movement, rotation) and menu controls (pause, new game).
+ */
 
 public class GameInputHandler {
 
     private final Set<KeyCode> pressedKeys = new HashSet<>();
     private InputCallback callback;
 
+    /**
+     * Callback interface for input action handling.
+     * Implementations define what happens for each type of input.
+     */
     public interface InputCallback {
         void onRotate();
         void onMoveLeft();
@@ -28,11 +36,25 @@ public class GameInputHandler {
         void onExit();
     }
 
+    /**
+     * Constructs a new input handler with the specified callback.
+     *
+     * @param callback the callback interface for handling input actions
+     */
     public GameInputHandler(InputCallback callback) {
         this.callback = callback;
     }
 
-    // Handle key press event
+    /**
+     * Handles key press events.
+     * Adds the key to the pressed keys set and delegates to appropriate handlers
+     * based on game state. Game controls are only active when the game is not
+     * paused and not over. Menu controls are always active.
+     *
+     * @param event the key press event
+     * @param isPaused whether the game is currently paused
+     * @param isGameOver whether the game is over
+     */
 
     public void handleKeyPressed(KeyEvent event, boolean isPaused, boolean isGameOver) {
         pressedKeys.add(event.getCode());
@@ -45,7 +67,12 @@ public class GameInputHandler {
         handleMenuControls(event);
     }
 
-    // Handle game-specific controls (movement, rotation, etc.)
+    /**
+     * Handles game-specific controls (movement, rotation, hold, drops).
+     * Supports simultaneous rotation and horizontal movement for advanced techniques.
+     *
+     * @param event the key press event
+     */
 
     private void handleGameControls(KeyEvent event) {
         KeyCode code = event.getCode();
@@ -92,7 +119,12 @@ public class GameInputHandler {
         }
     }
 
-    // Handle menu controls (new game, pause, exit)
+    /**
+     * Handles menu controls (new game, pause, exit).
+     * These controls are active regardless of game state.
+     *
+     * @param event the key press event
+     */
 
     private void handleMenuControls(KeyEvent event) {
         KeyCode code = event.getCode();
@@ -106,19 +138,32 @@ public class GameInputHandler {
         }
     }
 
-    // Handle key release event
+    /**
+     * Handles key release events.
+     * Removes the released key from the pressed keys set.
+     *
+     * @param event the key release event
+     */
 
     public void handleKeyReleased(KeyEvent event) {
         pressedKeys.remove(event.getCode());
     }
 
-    // Clear all pressed keys
+    /**
+     * Clears all currently pressed keys.
+     * Useful when losing focus or changing game states.
+     */
 
     public void clearPressedKeys() {
         pressedKeys.clear();
     }
 
-    // Check if a key is currently pressed
+    /**
+     * Checks if a specific key is currently pressed.
+     *
+     * @param keyCode the key code to check
+     * @return true if the key is currently pressed, false otherwise
+     */
 
     public boolean isKeyPressed(KeyCode keyCode) {
         return pressedKeys.contains(keyCode);

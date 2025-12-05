@@ -5,6 +5,10 @@ import com.comp2042.util.MatrixUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * I-shaped Tetris piece (I-tetromino).
+ * The iconic straight line piece, 4 blocks long.
+ */
 public final class IBrick implements Brick {
 
     private final List<int[][]> brickMatrix = new ArrayList<>();
