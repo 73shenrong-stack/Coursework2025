@@ -3,6 +3,11 @@ package com.comp2042.model.brick;
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Generates Tetris pieces using the standard "bag" randomization system.
+ * @see BrickGenerator
+ * @see Brick
+ */
 public class RandomBrickGenerator implements BrickGenerator {
 
     private final List<Brick> brickList;
@@ -35,6 +40,13 @@ public class RandomBrickGenerator implements BrickGenerator {
         currentBag.addAll(indices);
     }
 
+    /**
+     * Gets the next piece from the current bag, refilling if necessary.
+     * Each call creates a NEW brick instance using the type identified by the index.
+     * This prevents pieces from sharing state (rotation, position).
+     *
+     * @return a new brick instance of the next type in the bag
+     */
     private Brick getNextBrickFromBag() {
         if (currentBag.isEmpty()) {
             fillBag();
@@ -55,6 +67,11 @@ public class RandomBrickGenerator implements BrickGenerator {
         return new IBrick();
     }
 
+    /**
+     * Retrieves and consumes the next piece from the queue.
+     *
+     * @return the next brick to be used as the active piece
+     */
     @Override
     public Brick getBrick() {
         if (nextBricks.size() <= 1) {
@@ -63,6 +80,11 @@ public class RandomBrickGenerator implements BrickGenerator {
         return nextBricks.poll();
     }
 
+    /**
+     * Returns the next piece in the queue without consuming it.
+     *
+     * @return the piece that will be returned by the next getBrick() call
+     */
     @Override
     public Brick getNextBrick() {
         return nextBricks.peek();

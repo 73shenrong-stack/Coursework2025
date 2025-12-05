@@ -7,12 +7,19 @@ import java.nio.file.Paths;
 
 /**
  * Handles saving and loading game records to/from disk
+ * Provides fail-safe loading that returns default records if the file doesn't exist or is corrupted.
  */
 public class RecordsPersistence {
     private static final String RECORDS_DIR = System.getProperty("user.home") + File.separator + ".tetrisjfx";
     private static final String RECORDS_FILE = RECORDS_DIR + File.separator + "records.dat";
 
-    // Save game records to disk
+    /**
+     * Saves game records to disk using serialization.
+     * Creates the storage directory if it doesn't exist.
+     *
+     * @param records the GameRecords object to save
+     * @return true if save was successful, false if an error occurred
+     */
 
     public static boolean saveRecords(GameRecords records) {
         try {
@@ -34,7 +41,13 @@ public class RecordsPersistence {
         }
     }
 
-    // Load game records from disk
+    /**
+     * Loads game records from disk.
+     * If the file doesn't exist or cannot be read, returns a new
+     * GameRecords object with default values.
+     *
+     * @return GameRecords object loaded from disk, or new GameRecords if load fails
+     */
     public static GameRecords loadRecords() {
         File recordsFile = new File(RECORDS_FILE);
 

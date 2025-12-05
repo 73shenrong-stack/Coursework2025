@@ -17,6 +17,11 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Controller for the main menu screen.
+ * Handles navigation between the menu and game modes and provides an exit option.
+ * Applies appropriate CSS styling for the menu view and manages scene transitions to the game view.
+ */
 public class MainMenuController implements Initializable {
 
     @FXML
@@ -51,6 +56,13 @@ public class MainMenuController implements Initializable {
         startGame(GameMode.ZEN);
     }
 
+    /**
+     * Starts a game with the specified mode.
+     * Loads the game view FXML, transitions the scene, applies game styling,
+     * and initializes the game controller with the selected mode.
+     *
+     * @param mode the game mode to start
+     */
     private void startGame(GameMode mode) {
         try {
             URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
@@ -78,6 +90,13 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Gets the display title for a game mode.
+     * Converts the GameMode enum to a user-friendly display string.
+     *
+     * @param mode the game mode
+     * @return the display title string for the window title bar
+     */
     private String getModeTitle(GameMode mode) {
         switch (mode) {
             case BLITZ:
@@ -91,12 +110,25 @@ public class MainMenuController implements Initializable {
         }
     }
 
+    /**
+     * Handles the exit button action.
+     * Closes the application window, terminating the program.
+     *
+     * @param event the button click event
+     */
     @FXML
     public void onExit(ActionEvent event) {
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
     }
 
+    /**
+     * Returns to the main menu from the game view.
+     * Loads the main menu FXML, applies menu styling, and stops background music.
+     * This is a static utility method that can be called from anywhere with access to a scene node.
+     *
+     * @param currentNode any node in the current scene (used to access Stage)
+     */
     public static void returnToMainMenu(Node currentNode) {
         try {
             URL location = MainMenuController.class.getClassLoader().getResource("MainMenu.fxml");

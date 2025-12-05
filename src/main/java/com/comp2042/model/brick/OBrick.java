@@ -5,6 +5,10 @@ import com.comp2042.util.MatrixUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * O-shaped Tetris piece (O-tetromino).
+ * 2x2 square block that looks the same in all rotations.
+ */
 public final class OBrick implements Brick {
 
     private final List<int[][]> brickMatrix = new ArrayList<>();

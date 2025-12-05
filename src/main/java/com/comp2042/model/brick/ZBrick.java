@@ -5,6 +5,10 @@ import com.comp2042.util.MatrixUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Z-shaped Tetris piece (Z-tetromino).
+ * Zigzag shape pointing to the left (mirror of S-piece).
+ */
 public final class ZBrick implements Brick {
 
     private final List<int[][]> brickMatrix = new ArrayList<>();

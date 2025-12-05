@@ -5,6 +5,10 @@ import com.comp2042.util.MatrixUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * J-shaped Tetris piece (J-tetromino).
+ * L-shaped piece mirrored, with the hook pointing left.
+ */
 public final class JBrick implements Brick {
 
     private final List<int[][]> brickMatrix = new ArrayList<>();
