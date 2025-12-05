@@ -105,7 +105,7 @@ The application will start with the **Main Menu**, where you can select:
 ## New Java Classes
 
 | Class Name | Package | Purpose | Key Methods / Notes |
-|------------|---------|---------|----------------------|
+|------------|--------|-------------|-------------------|
 | **GameMode** | `com.comp2042.model.game` | Enum defining Blitz, 40 Lines, and Zen game modes, with display names and descriptions. | `getDisplayName()`, `getDescription()` |
 | **GameRecords** | `com.comp2042.model.game` | Manages high scores and best times per game mode; serializable for persistence. | `updateBlitzRecord()`, `updateFortyLinesRecord()`, `updateZenRecord()` |
 | **RecordsPersistence** | `com.comp2042.model.game` | Saves and loads `GameRecords` to/from disk using Java serialization. | `saveRecords()`, `loadRecords()` |
