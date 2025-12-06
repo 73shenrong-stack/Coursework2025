@@ -13,6 +13,24 @@ TetrisJFX is a fully-featured Tetris implementation built with JavaFX 23, offeri
 - Dual visual themes (Arcade/Zen) with mode-specific styling
 
 ---
+
+## Table of Contents
+
+| Section | Description |
+|---------|-------------|
+| [GitHub](#github) | Repository link |
+| [Compilation Instructions](#compilation-instructions) | How to build and run |
+| [Running Tests](#running-tests) | Test execution guide |
+| [Implemented and Working Properly](#implemented-and-working-properly) | Completed features |
+| [Implemented but Not Working Properly](#implemented-but-not-working-properly) | Known issues |
+| [Features Not Implemented](#features-not-implemented) | Omitted features |
+| [New Java Classes](#new-java-classes) | Newly created classes |
+| [Modified Java Classes](#modified-java-classes) | Changes to existing classes |
+| [Unexpected Problems](#unexpected-problems) | Challenges encountered |
+| [Conclusion](#conclusion) | Summary |
+
+---
+
 ## GitHub
 
 | Item | Link |
